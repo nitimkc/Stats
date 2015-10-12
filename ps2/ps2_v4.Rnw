@@ -61,10 +61,81 @@ To finally obtain the normal equations:
 \end{eqnarray}
 Hence proved.\\
 % EXERCISE 2
-\newline \textbf{\underline{Exercise 2}}\\
+\newpage
+\textbf{\underline{Exercise 2}}\\
+\newline \underline{Part 1}. Plotting the data:\\
+\begin{center}
+\includegraphics[scale=0.6]{ps2_plot1.png}
+\end{center}
+\underline{Part 2}. The \texttt{phix} function:
+<<chunk1, eval = FALSE, size = 'small'>>=
+################################################################################
+# Function "phix"
+phix <- function(x, M, basis) {
+################################################################################
+  # Check correctness of input x
+  if (x < 0 || x > 1) {
+    stop('out-of-range values in the input vector "x".')
+  }
+  
+  # Perform the calculations  
+  if (basis == 'poly') {
+    out <- rep(NA, length = M + 1)
+    sapply(c(0, 1:M), function(i) {
+      out[i + 1] <<- x^i
+    })
+  } else if (basis == 'Gauss') {
+    mus <- seq(0, 1, M ** (-1))
+    out <- rep(NA, length = M + 1)
+    sapply(1:(M + 1), function(i) {
+      out[i] <<- exp((-(x - mus[i]) ** 2) / 0.1)
+    })
+  } else {
+    stop('specify a valid option for the parameter "basis".')
+  }
+  
+  # Return the values
+  return(out)
+}
+@
+\underline{Part 3}. The \texttt{post.params} function:
+<<chunk2, eval = FALSE, size = 'small'>>=
+################################################################################
+# Function "post.params"
+post.params <- function(tdata, M, basis, phix, delta, q) {
+################################################################################
+  # Input data
+  t <- tdata[, 't']  # Response variable
+  x <- tdata[, 'x']  # Input variable
+  
+  # Initialize Phi matrix
+  phi <- matrix(nrow = length(x), ncol = M + 1)
+  sapply(1:length(x), function(i) {
+    phi[i, ] <<- phix(x = x[i], M = M, basis = basis)
+  })
+
+  # Function parameter
+  lambda <- delta / q
+  
+  # D matrix
+  D <- lambda * diag(ncol(phi))
+  
+  # Response parameters
+  w.bayes <- solve(D + t(phi) %*% phi) %*% t(phi) %*% t
+  Q <- D + q * t(phi) %*% phi
+  
+  # Results
+  return(list(w.bayes = w.bayes, Q = Q))
+}
+@
+\underline{Part 4}. Plotting the estimated linear predictor:
+\begin{center}
+\includegraphics[scale = 0.5]{ps2_plot2.png}
+\end{center}
 % PROBLEM SET 2 (PART 2)
 % EXERCISE 3
-\newline \textbf{\underline{Exercise 3}}\\
+\newpage
+\textbf{\underline{Exercise 3}}\\
 % EXERCISE 4
 \newline \textbf{\underline{Exercise 4}}\\
 
