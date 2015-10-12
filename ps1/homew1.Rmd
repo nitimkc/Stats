@@ -1,0 +1,55 @@
+---
+title: "Homework 1 - Statistical Modelling and Inference"
+author: "Ván Bálint"
+date: "October 7, 2015"
+output: html_document
+---
+
+## 1.
+
+IFF $x^{T}X^{T}Xx>=0$ for all x, than $X^{T}X$ is positive semi definite.
+
+$x^{T}X^{T}Xx=(Xx)^{T}Xx$
+
+$Xx$ is a $p*1$ vector, so $(Xx)^{T}Xx$ is an inner product.
+
+An inner product can never be negative, so $X^{T}X$ is always positive semi definite.
+
+## 2.
+```{r, echo=FALSE}
+download.file("http://statweb.stanford.edu/~tibs/ElemStatLearn/datasets/prostate.data", "prostate.txt")
+prostate<-read.table("prostate.txt")
+prostate[,1:8] <- scale(prostate[,1:8],TRUE,TRUE)
+```
+
+####Correlations of predictors in the prostate cancer data.
+```{r, echo=FALSE}
+cor(prostate[,1:8])
+```
+
+####Linear model fit to the prostate cancer (train) data.
+```{r, echo=FALSE}
+lm_prost1 <- lm(lpsa ~ lcavol + lweight + age + lbph + svi + lcp + gleason + pgg45, data=prostate[prostate$train==TRUE,])
+summary(lm_prost1)
+lm_prost2 <- lm(lpsa ~ lcavol + lweight + lbph + svi, data=prostate[prostate$train==TRUE,])
+RSS1 <- sum(residuals(lm_prost1)^2)
+RSS2 <- sum(residuals(lm_prost2)^2)
+Fvalue <- (RSS2-RSS1)/(9-5)/RSS1*(67-9)
+```
+The F-value is `r Fvalue`, with the corresponding p-value of `r pf(Fvalue,4,58,lower.tail=FALSE)`.
+
+The mean prediction error on the test data is `r mean(abs(predict.lm(lm_prost2, prostate[prostate$train==FALSE,]) - prostate$lpsa[prostate$train==FALSE]))`. In contrast, prediction using the mean training value of lpsa ha a test error of `r mean(abs(mean(prostate$lpsa[prostate$train==TRUE]) - prostate$lpsa[prostate$train==FALSE]))`.
+
+Lcp and lcavol have a strong correlation. When this is the case their coefficients can behave in unexpected ways if both are correlated to the dependent variable.
+
+## 3.
+
+1.
+
+$H=\phi(\phi^{T}\phi)^{-1}\phi^{T}$
+
+$H^{T}=(\phi(\phi^{T}\phi)^{-1}\phi^{T})^{T}=(\phi^{T})^{T}((\phi^{T}\phi)^{-1})^{T}\phi^{T}=\phi(\phi^{T}\phi)^{-1}\phi^{T}=H$
+
+2.
+
+
