@@ -94,7 +94,7 @@ Solution to proposed exercises.\\
 \max_{\mathbf{w}} -2 \log p(\mathbf{w | t, X}) &=&  -2q \mathbf{t}^T \mathbf{\Phi w} + q \mathbf{w}^T \mathbf{\Phi}^T \mathbf{\Phi w} + (\mathbf{w - \mu})^T \mathbf{D} (\mathbf{w - \mu}) + C \nonumber \\
 &=&  -2q \mathbf{t}^T \mathbf{\Phi w} + q \mathbf{w}^T \mathbf{\Phi}^T \mathbf{\Phi w} + \mathbf{w}^T \mathbf{D w} - 2 \mathbf{w}^T \mathbf{D} \mathbf{\mu} + \mathbf{\mu}^T \mathbf{D \mu} + C \nonumber
 \end{eqnarray}
-The value $C$ includes all constant terms not depending on $\mathbf{w}$. Now we maximize with respect to $\mathbf{w}$ and set to zero:
+The term $C$ includes all constant terms not dependant on $\mathbf{w}$. Now we maximize with respect to $\mathbf{w}$ and set to zero:
 \begin{eqnarray}
 -2q \mathbf{t}^T \mathbf{\Phi} + q \mathbf{w}^T \left(\mathbf{\Phi}^T \mathbf{\Phi} + \left( \mathbf{\Phi}^T \mathbf{\Phi} \right)^T \right) + \mathbf{w}^T \left( \mathbf{D} + \mathbf{D}^T \right) - 2 \left( \mathbf{D} \mathbf{\mu} \right)^T = 0 \nonumber
 \end{eqnarray}
@@ -136,11 +136,13 @@ Hence proved.\\
       \hlstd{out[i} \hlopt{+} \hlnum{1}\hlstd{]} \hlkwb{<<-} \hlstd{x}\hlopt{^}\hlstd{i}
     \hlstd{\})}
   \hlstd{\}} \hlkwa{else if} \hlstd{(basis} \hlopt{==} \hlstr{'Gauss'}\hlstd{) \{}
-    \hlstd{mus} \hlkwb{<-} \hlkwd{seq}\hlstd{(}\hlnum{0}\hlstd{,} \hlnum{1}\hlstd{, M} \hlopt{**} \hlstd{(}\hlopt{-}\hlnum{1}\hlstd{))}
-    \hlstd{out} \hlkwb{<-} \hlkwd{rep}\hlstd{(}\hlnum{NA}\hlstd{,} \hlkwc{length} \hlstd{= M} \hlopt{+} \hlnum{1}\hlstd{)}
-    \hlkwd{sapply}\hlstd{(}\hlnum{1}\hlopt{:}\hlstd{(M} \hlopt{+} \hlnum{1}\hlstd{),} \hlkwa{function}\hlstd{(}\hlkwc{i}\hlstd{) \{}
+    \hlcom{#mus <- seq(0, 1, M ** (-1))}
+    \hlstd{mus} \hlkwb{<-} \hlkwd{seq}\hlstd{(}\hlnum{0}\hlstd{,} \hlnum{1}\hlstd{,} \hlkwc{length.out} \hlstd{= M)}
+    \hlstd{out} \hlkwb{<-} \hlkwd{rep}\hlstd{(}\hlnum{NA}\hlstd{,} \hlkwc{length} \hlstd{= M)}
+    \hlkwd{sapply}\hlstd{(}\hlnum{1}\hlopt{:}\hlstd{M,} \hlkwa{function}\hlstd{(}\hlkwc{i}\hlstd{) \{}
       \hlstd{out[i]} \hlkwb{<<-} \hlkwd{exp}\hlstd{((}\hlopt{-}\hlstd{(x} \hlopt{-} \hlstd{mus[i])} \hlopt{**} \hlnum{2}\hlstd{)} \hlopt{/} \hlnum{0.1}\hlstd{)}
     \hlstd{\})}
+    \hlstd{out} \hlkwb{<-} \hlkwd{c}\hlstd{(}\hlnum{1}\hlstd{, out)}
   \hlstd{\}} \hlkwa{else} \hlstd{\{}
     \hlkwd{stop}\hlstd{(}\hlstr{'specify a valid option for the parameter "basis".'}\hlstd{)}
   \hlstd{\}}
@@ -172,12 +174,8 @@ Hence proved.\\
   \hlcom{# Function parameter}
   \hlstd{lambda} \hlkwb{<-} \hlstd{delta} \hlopt{/} \hlstd{q}
 
-  \hlcom{# D matrix}
-  \hlstd{D} \hlkwb{<-} \hlstd{lambda} \hlopt{*} \hlkwd{diag}\hlstd{(}\hlkwd{ncol}\hlstd{(phi))}
-
-  \hlcom{# Response parameters}
-  \hlstd{w.bayes} \hlkwb{<-} \hlkwd{solve}\hlstd{(D} \hlopt{+} \hlkwd{t}\hlstd{(phi)} \hlopt{%*%} \hlstd{phi)} \hlopt{%*%} \hlkwd{t}\hlstd{(phi)} \hlopt{%*%} \hlstd{t}
-  \hlstd{Q} \hlkwb{<-} \hlstd{D} \hlopt{+} \hlstd{q} \hlopt{*} \hlkwd{t}\hlstd{(phi)} \hlopt{%*%} \hlstd{phi}
+  \hlstd{Q} \hlkwb{<-} \hlstd{delta} \hlopt{*} \hlkwd{diag}\hlstd{(}\hlkwd{ncol}\hlstd{(phi))} \hlopt{+} \hlstd{q} \hlopt{*} \hlkwd{t}\hlstd{(phi)} \hlopt{%*%} \hlstd{phi}
+  \hlstd{w.bayes} \hlkwb{<-} \hlstd{q} \hlopt{*} \hlkwd{solve}\hlstd{(Q)} \hlopt{%*%} \hlkwd{t}\hlstd{(phi)} \hlopt{%*%} \hlstd{t}
 
   \hlcom{# Results}
   \hlkwd{return}\hlstd{(}\hlkwd{list}\hlstd{(}\hlkwc{w.bayes} \hlstd{= w.bayes,} \hlkwc{Q} \hlstd{= Q))}
@@ -193,7 +191,53 @@ Hence proved.\\
 % EXERCISE 3
 \newpage
 \textbf{\underline{Exercise 3}}\\
+\underline{Part 1}. The function that returns the mean and the precision of the predictive distribution at each of the inputs:
+\begin{knitrout}\small
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{################################################################################}
+\hlstd{bayesian.precision} \hlkwb{<-} \hlkwa{function}\hlstd{(}\hlkwc{x}\hlstd{) \{}
+\hlcom{################################################################################}
+  \hlcom{# Parameters}
+  \hlstd{M} \hlkwb{<-} \hlnum{9}
+  \hlstd{delta} \hlkwb{<-} \hlnum{1L}
+  \hlstd{q} \hlkwb{<-} \hlnum{0.1} \hlopt{**} \hlstd{(}\hlopt{-}\hlnum{2}\hlstd{)}
+
+  \hlcom{# Initialize Phi matrix (THINK post.params)}
+  \hlstd{phi} \hlkwb{<-} \hlkwd{matrix}\hlstd{(}\hlkwc{nrow} \hlstd{=} \hlkwd{length}\hlstd{(x),} \hlkwc{ncol} \hlstd{= M} \hlopt{+} \hlnum{1}\hlstd{)}
+  \hlkwd{sapply}\hlstd{(}\hlnum{1}\hlopt{:}\hlkwd{length}\hlstd{(x),} \hlkwa{function}\hlstd{(}\hlkwc{i}\hlstd{) \{}
+    \hlstd{phi[i, ]} \hlkwb{<<-} \hlkwd{phix}\hlstd{(}\hlkwc{x} \hlstd{= x[i],} \hlkwc{M} \hlstd{=} \hlnum{9}\hlstd{,} \hlkwc{basis} \hlstd{=} \hlstr{'Gauss'}\hlstd{)}
+  \hlstd{\})}
+
+  \hlcom{# Execute the function with the specified parameters}
+  \hlstd{params} \hlkwb{<-} \hlkwd{post.params}\hlstd{(cd,} \hlkwc{M} \hlstd{=} \hlnum{9}\hlstd{,} \hlkwc{basis} \hlstd{=} \hlstr{'Gauss'}\hlstd{, phix,}
+                         \hlkwc{delta} \hlstd{=} \hlnum{1L}\hlstd{,} \hlkwc{q} \hlstd{=} \hlnum{0.1} \hlopt{**} \hlstd{(}\hlopt{-}\hlnum{2}\hlstd{))}
+
+  \hlcom{# Resulting parameters}
+  \hlstd{Q} \hlkwb{<-} \hlstd{params[[}\hlnum{2}\hlstd{]]}
+  \hlstd{w.bayes} \hlkwb{<-} \hlstd{params[[}\hlnum{1}\hlstd{]]}
+
+  \hlcom{# Predicted values}
+  \hlstd{means} \hlkwb{<-} \hlstd{phi} \hlopt{%*%} \hlstd{w.bayes}
+  \hlstd{vars} \hlkwb{<-} \hlstd{phi} \hlopt{%*%} \hlkwd{solve}\hlstd{(Q)} \hlopt{%*%} \hlkwd{t}\hlstd{(phi)} \hlopt{+} \hlstd{q} \hlopt{**} \hlstd{(}\hlopt{-}\hlnum{1}\hlstd{)}
+
+  \hlcom{# Return}
+  \hlkwd{return}\hlstd{(}\hlkwd{list}\hlstd{(}\hlkwc{means} \hlstd{= means,} \hlkwc{vars} \hlstd{=} \hlkwd{diag}\hlstd{(vars)))}
+\hlstd{\}}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+\underline{Part 2}. Plotting the predicted mean with its standard predictive posterior deviation:
+\begin{center}
+\includegraphics[scale=0.6]{ps2_plot3.png}
+\end{center}
+\underline{Part 3}. Replicating the plot of the slides:
+\begin{center}
+\includegraphics[scale=0.6]{ps2_plot4.png}
+\includegraphics[scale=0.5]{ps2_plot5.png}
+\end{center}
 % EXERCISE 4
-\newline \textbf{\underline{Exercise 4}}\\
+\newpage
+\textbf{\underline{Exercise 4}}\\
 
 \end{document}

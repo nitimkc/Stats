@@ -45,7 +45,7 @@ Solution to proposed exercises.\\
 \max_{\mathbf{w}} -2 \log p(\mathbf{w | t, X}) &=&  -2q \mathbf{t}^T \mathbf{\Phi w} + q \mathbf{w}^T \mathbf{\Phi}^T \mathbf{\Phi w} + (\mathbf{w - \mu})^T \mathbf{D} (\mathbf{w - \mu}) + C \nonumber \\
 &=&  -2q \mathbf{t}^T \mathbf{\Phi w} + q \mathbf{w}^T \mathbf{\Phi}^T \mathbf{\Phi w} + \mathbf{w}^T \mathbf{D w} - 2 \mathbf{w}^T \mathbf{D} \mathbf{\mu} + \mathbf{\mu}^T \mathbf{D \mu} + C \nonumber
 \end{eqnarray}
-The value $C$ includes all constant terms not depending on $\mathbf{w}$. Now we maximize with respect to $\mathbf{w}$ and set to zero:
+The term $C$ includes all constant terms not dependant on $\mathbf{w}$. Now we maximize with respect to $\mathbf{w}$ and set to zero:
 \begin{eqnarray}
 -2q \mathbf{t}^T \mathbf{\Phi} + q \mathbf{w}^T \left(\mathbf{\Phi}^T \mathbf{\Phi} + \left( \mathbf{\Phi}^T \mathbf{\Phi} \right)^T \right) + \mathbf{w}^T \left( \mathbf{D} + \mathbf{D}^T \right) - 2 \left( \mathbf{D} \mathbf{\mu} \right)^T = 0 \nonumber
 \end{eqnarray}
@@ -85,11 +85,13 @@ phix <- function(x, M, basis) {
       out[i + 1] <<- x^i
     })
   } else if (basis == 'Gauss') {
-    mus <- seq(0, 1, M ** (-1))
-    out <- rep(NA, length = M + 1)
-    sapply(1:(M + 1), function(i) {
+    #mus <- seq(0, 1, M ** (-1))
+    mus <- seq(0, 1, length.out = M)
+    out <- rep(NA, length = M)
+    sapply(1:M, function(i) {
       out[i] <<- exp((-(x - mus[i]) ** 2) / 0.1)
     })
+    out <- c(1, out)
   } else {
     stop('specify a valid option for the parameter "basis".')
   }
@@ -117,13 +119,9 @@ post.params <- function(tdata, M, basis, phix, delta, q) {
   # Function parameter
   lambda <- delta / q
   
-  # D matrix
-  D <- lambda * diag(ncol(phi))
-  
-  # Response parameters
-  w.bayes <- solve(D + t(phi) %*% phi) %*% t(phi) %*% t
-  Q <- D + q * t(phi) %*% phi
-  
+  Q <- delta * diag(ncol(phi)) + q * t(phi) %*% phi
+  w.bayes <- q * solve(Q) %*% t(phi) %*% t
+    
   # Results
   return(list(w.bayes = w.bayes, Q = Q))
 }
@@ -136,7 +134,49 @@ post.params <- function(tdata, M, basis, phix, delta, q) {
 % EXERCISE 3
 \newpage
 \textbf{\underline{Exercise 3}}\\
+\underline{Part 1}. The function that returns the mean and the precision of the predictive distribution at each of the inputs:
+<<chunk 3, eval = FALSE, size = 'small'>>=
+################################################################################
+bayesian.precision <- function(x) {
+################################################################################
+  # Parameters
+  M <- 9
+  delta <- 1L
+  q <- 0.1 ** (-2)
+  
+  # Initialize Phi matrix (THINK post.params)
+  phi <- matrix(nrow = length(x), ncol = M + 1)
+  sapply(1:length(x), function(i) {
+    phi[i, ] <<- phix(x = x[i], M = 9, basis = 'Gauss')
+  })
+  
+  # Execute the function with the specified parameters
+  params <- post.params(cd, M = 9, basis = 'Gauss', phix,
+                         delta = 1L, q = 0.1 ** (-2))
+  
+  # Resulting parameters
+  Q <- params[[2]]
+  w.bayes <- params[[1]]
+  
+  # Predicted values
+  means <- phi %*% w.bayes
+  vars <- phi %*% solve(Q) %*% t(phi) + q ** (-1)
+  
+  # Return
+  return(list(means = means, vars = diag(vars)))
+}
+@
+\underline{Part 2}. Plotting the predicted mean with its standard predictive posterior deviation:
+\begin{center}
+\includegraphics[scale=0.6]{ps2_plot3.png}
+\end{center}
+\underline{Part 3}. Replicating the plot of the slides:
+\begin{center}
+\includegraphics[scale=0.6]{ps2_plot4.png}
+\includegraphics[scale=0.5]{ps2_plot5.png}
+\end{center}
 % EXERCISE 4
-\newline \textbf{\underline{Exercise 4}}\\
+\newpage
+\textbf{\underline{Exercise 4}}\\
 
 \end{document}
