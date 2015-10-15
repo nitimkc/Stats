@@ -85,7 +85,6 @@ phix <- function(x, M, basis) {
       out[i + 1] <<- x^i
     })
   } else if (basis == 'Gauss') {
-    #mus <- seq(0, 1, M ** (-1))
     mus <- seq(0, 1, length.out = M)
     out <- rep(NA, length = M)
     sapply(1:M, function(i) {

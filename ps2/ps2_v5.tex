@@ -136,7 +136,6 @@ Hence proved.\\
       \hlstd{out[i} \hlopt{+} \hlnum{1}\hlstd{]} \hlkwb{<<-} \hlstd{x}\hlopt{^}\hlstd{i}
     \hlstd{\})}
   \hlstd{\}} \hlkwa{else if} \hlstd{(basis} \hlopt{==} \hlstr{'Gauss'}\hlstd{) \{}
-    \hlcom{#mus <- seq(0, 1, M ** (-1))}
     \hlstd{mus} \hlkwb{<-} \hlkwd{seq}\hlstd{(}\hlnum{0}\hlstd{,} \hlnum{1}\hlstd{,} \hlkwc{length.out} \hlstd{= M)}
     \hlstd{out} \hlkwb{<-} \hlkwd{rep}\hlstd{(}\hlnum{NA}\hlstd{,} \hlkwc{length} \hlstd{= M)}
     \hlkwd{sapply}\hlstd{(}\hlnum{1}\hlopt{:}\hlstd{M,} \hlkwa{function}\hlstd{(}\hlkwc{i}\hlstd{) \{}
