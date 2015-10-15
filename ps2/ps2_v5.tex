@@ -170,9 +170,7 @@ Hence proved.\\
     \hlstd{phi[i, ]} \hlkwb{<<-} \hlkwd{phix}\hlstd{(}\hlkwc{x} \hlstd{= x[i],} \hlkwc{M} \hlstd{= M,} \hlkwc{basis} \hlstd{= basis)}
   \hlstd{\})}
 
-  \hlcom{# Function parameter}
-  \hlstd{lambda} \hlkwb{<-} \hlstd{delta} \hlopt{/} \hlstd{q}
-
+  \hlcom{# Parameter estimation}
   \hlstd{Q} \hlkwb{<-} \hlstd{delta} \hlopt{*} \hlkwd{diag}\hlstd{(}\hlkwd{ncol}\hlstd{(phi))} \hlopt{+} \hlstd{q} \hlopt{*} \hlkwd{t}\hlstd{(phi)} \hlopt{%*%} \hlstd{phi}
   \hlstd{w.bayes} \hlkwb{<-} \hlstd{q} \hlopt{*} \hlkwd{solve}\hlstd{(Q)} \hlopt{%*%} \hlkwd{t}\hlstd{(phi)} \hlopt{%*%} \hlstd{t}
 
@@ -190,7 +188,7 @@ Hence proved.\\
 % EXERCISE 3
 \newpage
 \textbf{\underline{Exercise 3}}\\
-\underline{Part 1}. The function that returns the mean and the precision of the predictive distribution at each of the inputs:
+\newline \underline{Part 1}. The function that returns the mean and the precision of the predictive distribution at each of the inputs:
 \begin{knitrout}\small
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}

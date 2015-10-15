@@ -115,9 +115,7 @@ post.params <- function(tdata, M, basis, phix, delta, q) {
     phi[i, ] <<- phix(x = x[i], M = M, basis = basis)
   })
 
-  # Function parameter
-  lambda <- delta / q
-  
+  # Parameter estimation
   Q <- delta * diag(ncol(phi)) + q * t(phi) %*% phi
   w.bayes <- q * solve(Q) %*% t(phi) %*% t
     
@@ -133,7 +131,7 @@ post.params <- function(tdata, M, basis, phix, delta, q) {
 % EXERCISE 3
 \newpage
 \textbf{\underline{Exercise 3}}\\
-\underline{Part 1}. The function that returns the mean and the precision of the predictive distribution at each of the inputs:
+\newline \underline{Part 1}. The function that returns the mean and the precision of the predictive distribution at each of the inputs:
 <<chunk 3, eval = FALSE, size = 'small'>>=
 ################################################################################
 bayesian.precision <- function(x) {
