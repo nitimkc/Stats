@@ -200,11 +200,14 @@ new.x <- seq(0, 1, 1/10000)
 res <- bayesian.precision(new.x)
 png(paste(OUTPUTDIR, 'ps2_plot3.png', sep = ''), height = 600, width = 600)
 plot(new.x, res[['means']], pch = '.', col = 'blue',
+#plot(smooth.spline(new.x, res[['means']]), pch = '.', col = 'blue',
      ylim = c(min(res[['means']]) - 0.2, max(res[['means']]) + 0.2),
      main = 'Predicted mean with standard predictive posterior deviation',
      ylab = 't', xlab = 'x')
-points(new.x, res[['means']] + sqrt(res[['vars']]), pch = '.', col = 'red')
-points(new.x, res[['means']] - sqrt(res[['vars']]), pch = '.', col = 'red')
+#points(new.x, res[['means']] + sqrt(res[['vars']]), pch = '.', col = 'red')
+lines(smooth.spline(new.x, res[['means']] + sqrt(res[['vars']])), pch = '.', col = 'red')
+#points(new.x, res[['means']] - sqrt(res[['vars']]), pch = '.', col = 'red')
+lines(smooth.spline(new.x, res[['means']] - sqrt(res[['vars']])), pch = '.', col = 'red')
 points(cd[, 'x'], cd[, 't'], pch = 16)
 dev.off()
 
@@ -218,6 +221,7 @@ set.seed(666)
 sim <- MASS::mvrnorm(100, mu = params[[1]], Sigma = solve(params[[2]]))
 
 # Replicate Phi
+M <- 9
 new.x <- seq(min(cd[, 'x']), max(cd[, 'x']), 1 / 1000)
 phi2 <- matrix(nrow = length(new.x), ncol = M + 1)
 sapply(1:length(new.x), function(i) {

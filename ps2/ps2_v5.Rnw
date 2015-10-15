@@ -144,7 +144,7 @@ bayesian.precision <- function(x) {
   delta <- 1L
   q <- 0.1 ** (-2)
   
-  # Initialize Phi matrix (THINK post.params)
+  # Initialize Phi matrix
   phi <- matrix(nrow = length(x), ncol = M + 1)
   sapply(1:length(x), function(i) {
     phi[i, ] <<- phix(x = x[i], M = 9, basis = 'Gauss')
@@ -181,15 +181,48 @@ bayesian.precision <- function(x) {
 \newline \underline{Part 1}. \\
 \newline We can prove this using the following rule:
 \begin{eqnarray}
-\phi (\mathbf{x})^T \mathbf{w}_B = \phi (\mathbf{x})^T q \mathbf{Q}^{-1} \phi (\mathbf{x}) \mathbf{t} = \sum_{n=1}^{N} q \phi (\mathbf{x})^T \mathbf{Q}^{-1} \phi(\mathbf{x}_n) t_n  \nonumber
+\phi (\mathbf{x})^T \mathbf{w}_B = \phi (\mathbf{x})^T q \mathbf{Q}^{-1} \phi (\mathbf{x}) \mathbf{t} = \phi (\mathbf{x})^T q \mathbf{Q}^{-1} \sum_{n = 1}^{N} \phi (\mathbf{x}_n) \mathbf{t}_n = \sum_{n=1}^{N} q \phi (\mathbf{x})^T \mathbf{Q}^{-1} \phi(\mathbf{x}_n) t_n  \nonumber
 \end{eqnarray}
+\newline Where $\mathbf{w}_B$ are the Bayesian parameters. We derive the fact that $\phi (\mathbf{x}) \mathbf{t} = \sum_{n = 1}^{N} \phi (\mathbf{x}_n) \mathbf{t}_n$ by noticing that this product is the inner product between them.\\
 \newline \underline{Part 2}. \\
+\newline We define:
+\begin{eqnarray}
+k(\mathbf{x}, \mathbf{y}) = q \phi (\mathbf{x})^T \mathbf{Q}^{-1} \phi (\mathbf{y}) \nonumber
+\end{eqnarray}
+Then:
+\begin{eqnarray}
+\phi (\mathbf{x})^T \mathbf{w}_B = \sum_{n=1}^{N} q \phi (\mathbf{x})^T \mathbf{Q}^{-1} \phi(\mathbf{x}_n) t_n = \sum_{n=1}^{N} k(\mathbf{x}, \mathbf{x}_n) t_n \nonumber
+\end{eqnarray}
+By this definition $k(\mathbf{x}, \mathbf{x}_n)$ becomes the weight of $t_n$ when computing the mean of the predictive distribution $\phi (\mathbf{x})^T \mathbf{w}_B$ at the input location $\mathbf{x}$.\\
 \newline \underline{Part 3}. \\
+\newline We use the following derivation:
+\begin{eqnarray}
+\mathbf{K} &=& \left( \begin{array}{ccccc}
+k(\mathbf{x}_1, \mathbf{x}_1) & & \cdots & & k(\mathbf{x}_1, \mathbf{x}_K) \\
+ & \ddots & & & \\
+\vdots & & k(\mathbf{x}_n, \mathbf{x}_k) & & \vdots \\
+ & & & \ddots & \\
+k(\mathbf{x}_N, \mathbf{x}_1) & & \cdots & & k(\mathbf{x}_N, \mathbf{x}_K) \end{array} \right) \nonumber \\
+&=& \left( \begin{array}{ccccc}
+q \phi (\mathbf{x}_1)^T \mathbf{Q}^{-1} \phi (\mathbf{x}_1) & & \cdots & & q \phi (\mathbf{x}_1)^T \mathbf{Q}^{-1} \phi (\mathbf{x}_K) \\
+ & \ddots & & & \\
+\vdots & & q \phi (\mathbf{x}_n)^T \mathbf{Q}^{-1} \phi (\mathbf{x}_k) & & \vdots \\
+ & & & \ddots & \\
+q \phi (\mathbf{x}_N)^T \mathbf{Q}^{-1} \phi (\mathbf{x}_1) & & \cdots & & q \phi (\mathbf{x}_N)^T \mathbf{Q}^{-1} \phi (\mathbf{x}_K) \end{array} \right) \nonumber \\
+&=& q \left( \begin{array}{c}
+\phi (\mathbf{x}_1)^T \\
+\vdots \\
+\phi (\mathbf{x}_N)^T \end{array} \right) \mathbf{Q}^{-1} \left( \begin{array}{c}
+\phi (\mathbf{x}_1) \\
+\vdots \\
+\phi (\mathbf{x}_K) \end{array} \right) \nonumber \\
+&=& q \mathbf{\Phi} \mathbf{Q}^{-1} \mathbf{\Phi}^T. \nonumber
+\end{eqnarray}
+Hence proved.\\
 \newline \underline{Part 4}. \\
 \newline Given $\lambda = 0$, the proof is the following:
 \begin{eqnarray}
 \mathbf{K} = q \mathbf{\Phi} (\delta \mathbf{I} + q \mathbf{\Phi}^T \mathbf{\Phi})^{-1} \mathbf{\Phi}^T = \mathbf{\Phi} (\lambda \mathbf{I} + \mathbf{\Phi}^T \mathbf{\Phi})^{-1} \mathbf{\Phi}^T = \mathbf{\Phi} (\mathbf{\Phi}^T \mathbf{\Phi})^{-1} \mathbf{\Phi}^T = \mathbf{H}. \nonumber
 \end{eqnarray}
-
 
 \end{document}
