@@ -5,6 +5,7 @@
 \usepackage[catalan]{babel}
 \usepackage{graphicx}
 \usepackage{eurosym}
+\usepackage{subcaption}
 \textheight=23.94cm 
 \textwidth=17cm 
 \topmargin=-1cm 
@@ -39,23 +40,36 @@
 Solution to proposed exercises.\\
 % EXERCISE 1
 \newline \textbf{\underline{Exercise 1}}\\
+\newline \underline{Part 1}\\
 \newline The exercise requires two extra parameters not defined, which are $\delta$ and $g$.\\
 \newline We keep $\delta$ as the degree of freedom. We will try to find $g$ in the following manner:
 \begin{itemize}
 \item To start, we compute the sample variance of the model with only the intercept.
-\item We plug the result in out first Bayesian iteration as a proxy for $g$, given a $\delta$.
-\item We obtain an updated result on $g$ after running the model and we use this result to re-run the model for a new $g$.
-\item We keep running models until we detect that $g$ stabilizes and we keep that stable $g$ for the ultimate model.
+\item We plug the result in out first Bayesian iteration as a proxy for $g$, given a specific $\delta$.
+\item We obtain an updated result on $g$ after running the model and we use this result to re-run the model  trying to find an updated $g$.
+\item We keep running models using this updating method until we detect that $g$ stabilizes, keeping that stable $g$ for the ultimate model.
 \end{itemize}
 The model shall look as follows:\\
 \begin{center}
 \includegraphics[scale=0.6]{ps3F_plot1.png}
 \end{center}
-We will plot the results of posterior draws using $\delta=2$, as used in previous exercises, since it is the value that best suits these data (see lectures).
-\begin{center}
-\includegraphics[scale=0.6]{ps3F_plot2.png}
-\end{center}
-Now we explore how the models are sensible to $\delta$. Note that we fix the value of $\delta$ and that $g$ is then determined by the aforementioned algorithm:\\
+For clarity we will plot the results of posterior draws using $\delta=2$, as used in previous exercises, since it is the value that best suits the data (see lectures).\\
+\begin{figure}
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[width=.8\linewidth]{ps3F_plot2.png}
+\end{subfigure}
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[width=.8\linewidth]{ps3F_plot2_0.png}
+\end{subfigure}
+\end{figure}
+%\begin{center}
+%\includegraphics[scale=0.6]{ps3F_plot2.png}
+%\includegraphics[scale=0.6]{ps3F_plot2_0.png}
+%\end{center}
+\underline{Part 2}\\
+\newline Now we explore how the models are sensible to $\delta$. Note that we fix the value of $\delta$ and that $g$ is then determined by the aforementioned algorithm:\\
 \begin{center}
 \includegraphics[scale=0.6]{ps3F_plot3_1.png}
 \includegraphics[scale=0.6]{ps3F_plot3_2.png}
@@ -75,6 +89,44 @@ Now we explore how the models are sensible to $\delta$. Note that we fix the val
 \end{center}
 Note that as $\delta$ increases (and $g$ decreases), the prediction becomes flatter and errors become bigger, with a .\\
 % EXERCISE 2
-\newline \textbf{\underline{Exercise 2}}\\
-
+\newpage
+\textbf{\underline{Exercise 2}}\\
+\newline \underline{Part 1}\\
+\newline We minimize the function:
+\begin{eqnarray}
+f(\mu) = (\mu - a)^2 + \lambda |\mu| \nonumber
+\end{eqnarray}
+Given $a, \lambda > 0$ on $\mu^+$. Hence,
+\begin{eqnarray}
+\frac{\partial f(\mu)}{\partial \mu^+} = 0 &\Leftrightarrow& 2(\mu^+ -a) + \lambda = 0 \nonumber \\
+&\Leftrightarrow& \mu = \left( a - \frac{\lambda}{2} \right)^+ \nonumber
+\end{eqnarray}
+Also, $f''(\mu^+) = 2$ so this is indeed a minimum.\\
+\newline \underline{Part 2}\\
+\newline The solution is the following:
+\begin{eqnarray}
+w_{MAP} &=& \arg \max \log p(\mathbf{w} |  \mathbf{t}) \nonumber \\
+&=& \arg \max \log p(\mathbf{t} | \mathbf{w}) + \log p(\mathbf{w}) \nonumber \\
+&=& \arg \max \log \prod_{n} p(\mathbf{t}_n | \mathbf{w}) + \log \exp \left\lbrace -\frac{\delta}{2} \sum_i |w_i|  \right\rbrace \nonumber \\
+&=&  \arg \max \sum_{n} \log \mathcal{N}(\mathbf{w} | q^{-1} \mathbf{I}) + \log \exp \left\lbrace -\frac{\delta}{2} \sum_i |w_i|  \right\rbrace\nonumber \\
+&=& \arg \max \sum_{n} \log \exp \left\lbrace -\frac{1}{2} (\mathbf{t}_n - \mathbf{w})^T q (\mathbf{t}_n - \mathbf{w}) \right\rbrace + \log \exp \left\lbrace -\frac{\delta}{2} \sum_i |w_i|  \right\rbrace + C \nonumber \\
+&=& \arg \max \sum_{n} -\frac{1}{2} (\mathbf{t}_n - \mathbf{w})^T q (\mathbf{t}_n - \mathbf{w}) -\frac{\delta}{2} \sum_i |w_i| + C \nonumber \\
+&=& \arg \min \sum_{n} q (\mathbf{t}_n - \mathbf{w})^T (\mathbf{t}_n - \mathbf{w}) + \delta \sum_i |w_i| + C \nonumber \\
+&=& \arg \min q \sum_{n} \sum_{i} (t_{ni} - w_i)^2 + \delta \sum_i |w_i| + C \nonumber
+\end{eqnarray}
+We now we maximize this expression with respect to $w_i$:
+\begin{eqnarray}
+\frac{\partial}{\partial w_{i}} = 0 &\Leftrightarrow& -2 q \sum_{n} (t_{ni} - w_{i}) + \delta \frac{w_i}{|w_i|} = 0 \nonumber
+\end{eqnarray}
+Given that we are working on the side of $w_{i}^{+}$ this simplifies to:
+\begin{eqnarray}
+\frac{\partial}{\partial w_{i}^{+}} = 0 &\Leftrightarrow& -2 q \sum_{n} (t_{ni} - w_{i}) + \delta = 0  \nonumber \\
+&\Leftrightarrow&w_{MAP} = \frac{1}{N} \left( \sum_n t_{ni} - \frac{\delta}{2} q^{-1} \right)^+ \nonumber
+%&\Leftrightarrow&w_i = \frac{1}{N} \left( \sum_n t_{ni} - 2\frac{\delta}{q} \right)^+ \nonumber
+\end{eqnarray}
 \end{document}
+
+
+
+
+

@@ -77,6 +77,28 @@ for (i in 1:nrow(sim)) {
 points(cd[, 'x'], cd[, 't'], pch = 16, col = 'blue')
 dev.off()
 
+# Repeat with a smaller simulation
+nsim <- 100
+set.seed(234)
+#sim <- MASS::mvrnorm(nsim, mu = w.bayes, Sigma = a. / (a. - 2) * solve(D.))
+#sim <- MASS::mvrnorm(100, mu = w.bayes, Sigma = 0.02248202 * solve(D.))
+sim <- MASS::mvrnorm(nsim, mu = w.bayes, Sigma = solve(D.))
+#sim <- blabla
+
+# Plot
+png('/Users/miquel/Desktop/bgse/courses/term1/smi/ps/ps3/ps3F_plot2_0.png')
+main <- 'Posterior draws of the L.P. (n = 100, delta = 2, approx. g = 89)'
+plot(cd[, 'x'], cd[, 't'], pch = 16, col = 'blue',
+     ylim = c(min(cd[, 't']) - 1.5, max(cd[, 't']) + 1.5),
+     main = main,
+     ylab = 't', xlab = 'x')
+for (i in 1:nrow(sim)) {
+  new.res <- phi4 %*% sim[i, ]
+  lines(new.x, new.res, col = 'gray')
+}
+points(cd[, 'x'], cd[, 't'], pch = 16, col = 'blue')
+dev.off()
+
 # Plot many values of delta
 plot.model(delta = 0.0001, 'ps3F_plot3_1.png')
 plot.model(delta = 0.001, 'ps3F_plot3_2.png')
