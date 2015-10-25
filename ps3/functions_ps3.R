@@ -95,5 +95,5 @@ plot.model <- function(delta, dpng = NULL) {
   }
     
   return(invisible(list(par1 = par1, par2 = par2., par3 = par3,
-                        w.bayes = w.bayes, D. = D.)))
+                        w.bayes = w.bayes, D. = D., a. = a., b. = b.)))
 }

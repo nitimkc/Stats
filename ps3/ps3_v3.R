@@ -7,11 +7,12 @@
 # Author : (c) Miquel Torrens
 # Date   : 2015.10.23
 ################################################################################
-# source('/Users/miquel/Desktop/bgse/courses/term1/smi/ps/ps3/ps3_v2.R')
+# source('/Users/miquel/Desktop/bgse/courses/term1/smi/ps/ps3/ps3_v3.R')
 ################################################################################
 
 # Libraries
 library(mnormt)
+library(mvtnorm)
 
 # Load previous problem set
 source('/Users/miquel/Desktop/bgse/courses/term1/smi/ps/ps2/ps2_v6.R')
@@ -31,21 +32,16 @@ invisible(sapply(1:length(x), function(i) {
 }))
 
 #res <- plot.model(delta = 9, 'ps3_plot1.png')
-res <- plot.model(delta = 2, 'ps3F_plot1.png')
-#stop()
+#res <- plot.model(delta = 2, 'ps3F_plot1.png')
+res <- plot.model(delta = 1, 'ps3F_plot1.png')
+
 par1. <- as.vector(res[['par1']])
 par2. <- as.vector(sqrt(res[['par2']]))
 par3. <- res[['par3']]
 w.bayes <- res[['w.bayes']]
 D. <- res[['D.']]
-
-#blabla <- rmt(n = 100, w.bayes, solve(D.), par3.)
-##blabla <- mnormt::rmt(n = 100, as.vector(par1), solve(diag(par2)), par3)
-##blabla <- mnormt::rmt(n = 100, as.vector(par1), par3 / (par3 - 2) * solve(D.), par3)
-#plot(par1)
-#for (i in 1:nrow(blabla)) {
-#  lines(blabla[i, ], col = 'red')
-#}
+a. <- res[['a.']]
+b. <- res[['b.']]
 
 # Replicate Phi
 M <- 9
@@ -58,16 +54,15 @@ sapply(1:length(new.x), function(i) {
 # Simulate
 nsim <- 1000
 set.seed(666)
-#sim <- MASS::mvrnorm(nsim, mu = w.bayes, Sigma = a. / (a. - 2) * solve(D.))
-#sim <- MASS::mvrnorm(100, mu = w.bayes, Sigma = 0.02248202 * solve(D.))
 sim <- MASS::mvrnorm(nsim, mu = w.bayes, Sigma = solve(D.))
-#sim <- blabla
+#sim <- mvtnorm::rmvt(n = nsim, delta = as.vector(w.bayes), sigma = solve(a. / (a. - 2) * solve(D.)), df = 2 * a.)
+sim <- mvtnorm::rmvt(n = nsim, delta = as.vector(w.bayes), solve(as.numeric(a. / b.) * D.), df = 2 * a.)
 
 # Plot
 png('/Users/miquel/Desktop/bgse/courses/term1/smi/ps/ps3/ps3F_plot2.png')
-main <- 'Posterior draws of the L.P. (n = 1000, delta = 2, approx. g = 89)'
+main <- 'Posterior draws of the L.P. (n = 1000, delta = 1, approx. g = 104)'
 plot(cd[, 'x'], cd[, 't'], pch = 16, col = 'blue',
-     ylim = c(min(cd[, 't']) - 1.5, max(cd[, 't']) + 1.5),
+     ylim = c(min(cd[, 't']) - 0.5, max(cd[, 't']) + 0.5),
      main = main,
      ylab = 't', xlab = 'x')
 for (i in 1:nrow(sim)) {
@@ -79,17 +74,16 @@ dev.off()
 
 # Repeat with a smaller simulation
 nsim <- 100
-set.seed(234)
-#sim <- MASS::mvrnorm(nsim, mu = w.bayes, Sigma = a. / (a. - 2) * solve(D.))
-#sim <- MASS::mvrnorm(100, mu = w.bayes, Sigma = 0.02248202 * solve(D.))
+set.seed(666)
 sim <- MASS::mvrnorm(nsim, mu = w.bayes, Sigma = solve(D.))
-#sim <- blabla
+#sim <- mvtnorm::rmvt(n = nsim, delta = as.vector(w.bayes), solve(a. / (a. - 2) * solve(D.)), df = 2 * a.)
+sim <- mvtnorm::rmvt(n = nsim, delta = as.vector(w.bayes), solve(as.numeric(a. / b.) * D.), df = 2 * a.)
 
 # Plot
 png('/Users/miquel/Desktop/bgse/courses/term1/smi/ps/ps3/ps3F_plot2_0.png')
-main <- 'Posterior draws of the L.P. (n = 100, delta = 2, approx. g = 89)'
+main <- 'Posterior draws of the L.P. (n = 100, delta = 1, approx. g = 104)'
 plot(cd[, 'x'], cd[, 't'], pch = 16, col = 'blue',
-     ylim = c(min(cd[, 't']) - 1.5, max(cd[, 't']) + 1.5),
+     ylim = c(min(cd[, 't']) - 0.5, max(cd[, 't']) + 0.5),
      main = main,
      ylab = 't', xlab = 'x')
 for (i in 1:nrow(sim)) {
@@ -116,24 +110,4 @@ plot.model(delta = 100, 'ps3F_plot11.png')
 plot.model(delta = 1000, 'ps3F_plot12.png')
 plot.model(delta = 1000000, 'ps3F_plot13.png')
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+# END OF SCRIPT
