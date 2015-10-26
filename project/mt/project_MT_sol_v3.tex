@@ -161,32 +161,26 @@ Thus proved.\\
 \end{subfigure}
 \end{figure}
 For $m=1$ the three curves overlap. We check graphically that $f_2 \leq f_1 \leq f_3$ for $\alpha \in [0,1]$.\\
-% EXERCISE 5
+% EXERCISE 5 (OPTIONAL)
 \newline \textbf{\underline{Exercise 2.5}}\\
-\newline We have $\alpha \in [0,1]$ and $m$ as a positive integer. We first prove that $f_2 \leq f_1$:
+\newline We first prove that $f_2 \leq f_1$. We need to show that:
 \begin{eqnarray}
-\frac{\alpha}{m} \leq 1 - (1- \alpha)^{1/m} \nonumber
+\frac{\alpha}{m} \leq 1 - (1 - \alpha)^{1/m} \nonumber
 \end{eqnarray}
-This would imply:
+Observe that this would imply:
 \begin{eqnarray}
-(1-\alpha)^{1/m} \leq 1 - \frac{\alpha}{m} \nonumber
+\frac{\alpha}{m} \leq 1 - (1 - \alpha)^{1/m} \Leftrightarrow  (1 - \alpha)^{1/m} \leq 1 - \frac{\alpha}{m} \Leftrightarrow 1 - \alpha \leq \left( 1 - \frac{\alpha}{m} \right)^{m} \nonumber
 \end{eqnarray}
-\newline It is straightforward to see that the inequality holds for $\alpha = 0$ and $\alpha=1$. To see if that is true for the all $\alpha \in [0,1]$, we want to check if the slope of the function on $\alpha$ is also steeper for $f_2$. We take derivatives on both sides with respect to $\alpha$:
+Now let's define $x \equiv -\alpha / m$. Given $\alpha < m$, we know that $x \geq -1$. Now we can use Bernouilli's inequality, that says that $(1+x)^r > (1+rx)$ for $r>0$ and $x \geq -1$. Applying this inequality, we get:
 \begin{eqnarray}
--\frac{1}{m} (1-\alpha)^{1/m -1} \leq -\frac{1}{m}  \Leftrightarrow (1-\alpha)^{1/m -1} \geq 1 \nonumber
+\left( 1 - \frac{\alpha}{m} \right)^{m} \geq 1 - m \frac{\alpha}{m} = 1 - \alpha \nonumber
 \end{eqnarray}
-These expressions are monotonic on  $\alpha$. The exponent on LHS in the right inequality is a negative number and $0<(1-\alpha)<1$, so the inequality holds. This concludes that $f_2 \leq f_1$ for $\alpha \in [0,1]$ and $m$ a positive integer.\\
-\newline For $f_1 \leq f_3$ we need:
+This proves $f_2 \leq f_1$. For the second inequality we need to show $f_1 \leq f_3$, that is that $1 - (1 - \alpha)^{1/m} \leq \alpha$. We proceed analogously:
 \begin{eqnarray}
-1 - (1- \alpha)^{1/m} \leq \alpha \nonumber
+1 - (1 - \alpha)^{1/m} \leq \alpha \Leftrightarrow  1 - \alpha \leq (1 - \alpha)^{1/m} \nonumber
 \end{eqnarray}
-We proceed analogously. This equality holds plugging $\alpha=0$ and $\alpha=1$. Derivatives on both sides should produce:
-\begin{eqnarray}
-\frac{1}{m} (1-\alpha)^{1/m -1} \leq 1 \nonumber
-\end{eqnarray}
-This holds with equality for $\alpha=0$ and is decreasing in $\alpha$, so with inequality for $\alpha>0$. Thus as a whole the inequality holds. Provided monotonicity, this concludes that $f_1 \leq f_3$.\\
-\newline Hence, we conclude that $f_2 \leq f_1 \leq f_3$ for $\alpha \in [0,1]$ and $m$ a positive integer.\\
-%\newline Notice that the RHS is increasing with respect to $m$ and LHS is decreasing with respect to $m$. For $m=1$, $\text{LHS}=\text{RHS} = 1-a$ and for $\lim_{m \rightarrow \infty} \text{LHS} = \lim_{m \rightarrow \infty} \text{RHS} = 1$. Hence with respect to $m$ the inequality holds.
+When $\alpha \in [0,1]$ and $m$ as a positive integer, it is straightforward to see that this second inequality holds. This proves that $f_1 \leq f_3$.\\
+\newline Therefore, we conclude $f_2 \leq f_1 \leq f_3$ when $\alpha \in [0,1]$ and $m$ is a positive integer.\\
 % EXERCISE 6
 \newline \textbf{\underline{Exercise 2.6}}\\
 \newline An approach that makes no correction for multiple testing the level is determined by the size $\alpha \in [0,1]$. This level is, as proven before, necessarily higher than the one using a multiple-test sensitive approach, which leads to a significance level $1 - (1- \alpha)^{1/m}$.\\
@@ -205,9 +199,7 @@ Given $\alpha \in [0,1]$ and $m$ as a positive integer, we know:
 \end{eqnarray}
 The second inequality is proved using Bonferroni's inequality\footnote{This inequality states that $\mathbb{P}(A_1 \cup A_2) = \mathbb{P}(A_1) + \mathbb{P}(A_2) - \mathbb{P}(A_1 \cap A_2) \leq \mathbb{P}(A_1) + \mathbb{P}(A_2)$, which can be generalized to $\mathbb{P}(\cup_i A_i) \leq \sum_i \mathbb{P}(A_i)$, also known as Boole's inequality.}. Given that the individual probability $\mathbb{P}_{C-H}(p_{i}(\mathbf{Y}_i) \leq \alpha) = \alpha$, then:
 \begin{eqnarray}
-\mathbb{P}_{C-H} \left[ \bigcup_{i=1}^{m} \left\{ p_i(\mathbf{Y}_i) < \alpha \right\} \right] &\leq& \sum_{i=1}^{m} \mathbb{P}_{C-H} (p_i(\mathbf{Y}_i) \nonumber \\
-&\leq& \sum_{i=1}^{m} \alpha  \nonumber \\
-&\leq& m \alpha \nonumber
+\mathbb{P}_{C-H} \left[ \bigcup_{i=1}^{m} \left\{ p_i(\mathbf{Y}_i) < \alpha \right\} \right] &\leq& \sum_{i=1}^{m} \mathbb{P}_{C-H} [ p_i(\mathbf{Y}_i) < \alpha ] = \sum_{i=1}^{m} \alpha = m \alpha \nonumber
 \end{eqnarray}
 Thus,
 \begin{eqnarray}
@@ -226,7 +218,7 @@ This implies that for $\mathbb{P} [ \cap_{i=1}^{m} \{y_i > l_i \} ] = 1-\alpha$,
 \begin{eqnarray}
 \mathbb{P} [ \cup_{i=1}^{m} \{y_i < l_i \} ] = 1 - (1-\alpha) = \alpha \nonumber
 \end{eqnarray}
-Now given that $p_{(i)}$ is uniformly distributed between 0 and 1, under the complete null hypothesis the probability that at least one $p_{(i)} < l_i$ is defined by:
+Now given that $p_i (\mathbf{X}_i)$ is uniformly distributed\footnote{See Exercise 1.3} between 0 and 1, under the complete null hypothesis the probability that at least one $p_{(i)} < l_i$ is defined by:
 \begin{eqnarray}
 \mathbb{P}_{C-H} \left[ \bigcup_{i=1}^{m} \left\{p_{(i)} < \frac{i \alpha}{m} \right\} \right] = \alpha \nonumber
 \end{eqnarray}
