@@ -86,12 +86,13 @@ For $z \in [0,1]$ we have $F_Z (z) = F_U (z)$ and as $Z = F_Y(y)$ we know that t
 p(\mathbf{X})=1 - F_H(T(\mathbf{X})) \nonumber
 %\text{p-value} = \mathbb{P}(H < T(\mathbf{Y})) = F_H (T(\mathbf{Y})) \nonumber
 \end{eqnarray}
-We know that $F_H(T(\mathbf{X}))$ and therefore $1-F_H(T(\mathbf{X}))$ are continuous distributions and thus it is valid to apply the proof from Exercise 1.3 to say that the p-value follows a uniform distributuon.\\
+We know that $F_H(T(\mathbf{X}))$ and therefore $1-F_H(T(\mathbf{X}))$ are continuous distributions and thus it is valid to apply the proof from Exercise 1.3 to say that the p-value follows a uniform distributuon between 0 and 1.\\
 %%%%%%%%%%%%%%%%
 % PART 2
 %%%%%%%%%%%%%%%%
 % EXERCISE 1
-\newline \textbf{\underline{Exercise 2.1}}\\
+\newpage
+\textbf{\underline{Exercise 2.1}}\\
 \newline Given that $y_i$ is uniform between 0 and 1 for all $i$, and given $\alpha \in [0,1]$, we know:
 \begin{eqnarray}
 \mathbb{P}(y_i < \alpha) = \alpha \nonumber
@@ -100,7 +101,7 @@ The complementary probability states\footnote{Recall that by continuity $\mathbb
 \begin{eqnarray}
 \mathbb{P}(y_i > \alpha) = 1 - \alpha \nonumber
 \end{eqnarray}
-Then:
+Then by independence:
 \begin{eqnarray}
 \mathbb{P}((y_1 > \alpha) \cap (y_2 > \alpha) \cap \dots \cap (y_m > \alpha)) = (1 -\alpha)(1 -\alpha) \dots (1 -\alpha) \nonumber
 \end{eqnarray}
@@ -111,7 +112,7 @@ Where $(1 -\alpha)$ is replicated $m$ times. Then:
 Hence proved.\\
 % EXERCISE 2
 \newline \textbf{\underline{Exercise 2.2}}\\
-\newline With a signle case the null hypothesis is accepted if the p-value $p_i(\mathbf{X}_i) > \alpha$. Thus the complete null is satisfied with probability:
+\newline With a single case the null hypothesis is accepted if the p-value $p_i(\mathbf{X}_i) > \alpha$. Thus the complete null is satisfied with probability:
 \begin{eqnarray}
 \mathbb{P} \left( \bigcap_{i=1}^{m} p_i(\mathbf{X}_i) > \alpha \right) \nonumber
 \end{eqnarray}
@@ -162,7 +163,7 @@ Thus proved.\\
 \end{figure}
 For $m=1$ the three curves overlap. We check graphically that $f_2 \leq f_1 \leq f_3$ for $\alpha \in [0,1]$.\\
 % EXERCISE 5 (OPTIONAL)
-\newline \textbf{\underline{Exercise 2.5}}\\
+\newline \textbf{\underline{Exercise 2.5} (Optional)}\\
 \newline We first prove that $f_2 \leq f_1$. We need to show that:
 \begin{eqnarray}
 \frac{\alpha}{m} \leq 1 - (1 - \alpha)^{1/m} \nonumber
@@ -175,7 +176,7 @@ Now let's define $x \equiv -\alpha / m$. Given $\alpha < m$, we know that $x \ge
 \begin{eqnarray}
 \left( 1 - \frac{\alpha}{m} \right)^{m} \geq 1 - m \frac{\alpha}{m} = 1 - \alpha \nonumber
 \end{eqnarray}
-This proves $f_2 \leq f_1$. For the second inequality we need to show $f_1 \leq f_3$, that is that $1 - (1 - \alpha)^{1/m} \leq \alpha$. We proceed analogously:
+This proves the expression above and shows that $f_2 \leq f_1$. For the second inequality we need to show $f_1 \leq f_3$, that is that $1 - (1 - \alpha)^{1/m} \leq \alpha$. We proceed analogously:
 \begin{eqnarray}
 1 - (1 - \alpha)^{1/m} \leq \alpha \Leftrightarrow  1 - \alpha \leq (1 - \alpha)^{1/m} \nonumber
 \end{eqnarray}
@@ -183,25 +184,39 @@ When $\alpha \in [0,1]$ and $m$ as a positive integer, it is straightforward to 
 \newline Therefore, we conclude $f_2 \leq f_1 \leq f_3$ when $\alpha \in [0,1]$ and $m$ is a positive integer.\\
 % EXERCISE 6
 \newline \textbf{\underline{Exercise 2.6}}\\
-\newline An approach that makes no correction for multiple testing the level is determined by the size $\alpha \in [0,1]$. This level is, as proven before, necessarily higher than the one using a multiple-test sensitive approach, which leads to a significance level $1 - (1- \alpha)^{1/m}$.\\
+\newline With an approach that makes no correction for multiple testing each test is treated individually and the level is determined by $\alpha \in [0,1]$. This level is, as proven before, necessarily higher than the one using a multiple-test sensitive approach, which leads to a deterministic individual significance level of $1 - (1- \alpha)^{1/m}$.\\
 %%%%%%%%%%%%%%%%
 % PART 3
 %%%%%%%%%%%%%%%%
 % EXERCISE 1
-\newline \textbf{\underline{Exercise 3.1}}\\
+\newpage
+\textbf{\underline{Exercise 3.1}}\\
 \newline We shall show this tackling separately both inequalities.\\
-\newline As for the first inequality, the result of Exercise 2.2 concludes that:\begin{eqnarray}
-\mathbb{P}_{C-H} \left[ \bigcup_{i=1}^{m} \left\lbrace p_i(\mathbf{Y}_i) < \alpha \right\rbrace \right] = 1 - (1-\alpha)^m. \nonumber
-\end{eqnarray}
-Given $\alpha \in [0,1]$ and $m$ as a positive integer, we know:
+\newline As for the first inequality, we use the basic property $\mathbb{P}[A_1] \leq \mathbb{P}[A_1 \cup A_2]$ to more generally see that:
 \begin{eqnarray}
-(1-\alpha)^m \leq (1 - \alpha) \Leftrightarrow \alpha \leq 1 - (1-\alpha)^m \Leftrightarrow \alpha \leq \mathbb{P}_{C-H} \left[ \bigcup_{i=1}^{m} \left\lbrace p_i(\mathbf{Y}_i) < \alpha \right\rbrace \right] \nonumber
+\mathbb{P}[A_i] \leq \mathbb{P}\left[ \bigcup_{i=1}^{m} A_i \right] \nonumber
 \end{eqnarray}
-The second inequality is proved using Bonferroni's inequality\footnote{This inequality states that $\mathbb{P}(A_1 \cup A_2) = \mathbb{P}(A_1) + \mathbb{P}(A_2) - \mathbb{P}(A_1 \cap A_2) \leq \mathbb{P}(A_1) + \mathbb{P}(A_2)$, which can be generalized to $\mathbb{P}(\cup_i A_i) \leq \sum_i \mathbb{P}(A_i)$, also known as Boole's inequality.}. Given that the individual probability $\mathbb{P}_{C-H}(p_{i}(\mathbf{Y}_i) \leq \alpha) = \alpha$, then:
+%\newline As for the first inequality, the result of Exercise 2.2 concludes that:%\begin{eqnarray}
+%\mathbb{P}_{C-H} \left[ \bigcup_{i=1}^{m} \left\lbrace p_i(\mathbf{Y}_i) < \alpha \right\rbrace \right] = 1 - (1-\alpha)^m. \nonumber
+%\end{eqnarray}
+Given the individual probability $\mathbb{P}_{C-H}[p_{i}(\mathbf{Y}_i) \leq \alpha] = \alpha$, in our setting this implies that:
+\begin{eqnarray}
+\alpha = \mathbb{P}_{C-H}[p_i(\mathbf{Y}_i) < \alpha] \leq \mathbb{P}_{C-H} \left[ \bigcup_{i=1}^{m} \left\lbrace p_i(\mathbf{Y}_i) < \alpha \right\rbrace \right] \nonumber
+%(1-\alpha)^m \leq (1 - \alpha) \Leftrightarrow \alpha \leq 1 - (1-\alpha)^m \Leftrightarrow \alpha \leq \mathbb{P}_{C-H} \left[ \bigcup_{i=1}^{m} \left\lbrace p_i(\mathbf{Y}_i) < \alpha \right\rbrace \right] \nonumber
+\end{eqnarray}
+This proves the lower bound inequality. The second inequality is proved using the following rule:
+\begin{eqnarray}
+\mathbb{P}[A_1 \cup A_2] = \mathbb{P}[A_1] + \mathbb{P}[A_2] - \mathbb{P}[A_1 \cap A_2] \leq \mathbb{P}[A_1] + \mathbb{P}[A_2] \nonumber
+\end{eqnarray}
+This can be generalized\footnote{We find this to be referred in some contexts as Bonferroni's inequality or Boole's inequality.} to:
+\begin{eqnarray}
+\mathbb{P}[\cup_i A_i] \leq \sum_i \mathbb{P}[A_i] \nonumber
+\end{eqnarray}
+Given that the individual probability $\mathbb{P}_{C-H}[p_{i}(\mathbf{Y}_i) \leq \alpha] = \alpha$. Then:
 \begin{eqnarray}
 \mathbb{P}_{C-H} \left[ \bigcup_{i=1}^{m} \left\{ p_i(\mathbf{Y}_i) < \alpha \right\} \right] &\leq& \sum_{i=1}^{m} \mathbb{P}_{C-H} [ p_i(\mathbf{Y}_i) < \alpha ] = \sum_{i=1}^{m} \alpha = m \alpha \nonumber
 \end{eqnarray}
-Thus,
+Thus, we conclude:
 \begin{eqnarray}
 \alpha \leq \mathbb{P}_{C-H} \left[ \bigcup_{i=1}^{m} \left\{ p_i(\mathbf{Y}_i) < \alpha \right\} \right] \leq m \alpha. \nonumber
 \end{eqnarray}
@@ -209,8 +224,9 @@ Thus,
 % PART 4
 %%%%%%%%%%%%%%%%
 % EXERCISE 1
-\newline \textbf{\underline{Exercise 4.1}}\\
-\newline If we define the event that all $y_i$ be greater than their respective $l_i$ as $A \equiv \cap_{i=1}^{m} \{y_i > l_i \}$, then we have $A^{c} = \cup_{i=1}^{m} \{y_i < l_i \}$, because that defines the event that at least some $y_i$ be smaller than its corresponding $l_i$. Since these are complementary probabilities,
+\newpage
+\textbf{\underline{Exercise 4.1}}\\
+\newline If we define the event that all i.i.d. $y_i \sim\text{Unif}(0, 1)$ be greater than their respective $l_i$ as $A \equiv \cap_{i=1}^{m} \{y_i > l_i \}$, then we have $A^{c} = \cup_{i=1}^{m} \{y_i < l_i \}$, because that defines the event that at least some $y_i$ be smaller than its corresponding $l_i$. Since these are complementary probabilities,
 \begin{eqnarray}
 \mathbb{P} [ \cap_{i=1}^{m} \{y_i > l_i \} ] + \mathbb{P} [ \cup_{i=1}^{m} \{y_i < l_i \} ]  = 1\nonumber
 \end{eqnarray}
@@ -218,7 +234,7 @@ This implies that for $\mathbb{P} [ \cap_{i=1}^{m} \{y_i > l_i \} ] = 1-\alpha$,
 \begin{eqnarray}
 \mathbb{P} [ \cup_{i=1}^{m} \{y_i < l_i \} ] = 1 - (1-\alpha) = \alpha \nonumber
 \end{eqnarray}
-Now given that $p_i (\mathbf{X}_i)$ is uniformly distributed\footnote{See Exercise 1.3} between 0 and 1, under the complete null hypothesis the probability that at least one $p_{(i)} < l_i$ is defined by:
+Now given that $p_i (\mathbf{X}_i)$ is uniformly distributed\footnote{See exercises 1.3 and 1.4} between 0 and 1, under the complete null hypothesis the probability that at least one $p_{(i)} < l_i$ is defined by:
 \begin{eqnarray}
 \mathbb{P}_{C-H} \left[ \bigcup_{i=1}^{m} \left\{p_{(i)} < \frac{i \alpha}{m} \right\} \right] = \alpha \nonumber
 \end{eqnarray}
