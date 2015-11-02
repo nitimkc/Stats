@@ -46,13 +46,14 @@ Solution to proposed exercises.\\
 \newline \textbf{\underline{Exercise 1}}\\
 \newline We need to show that $y(\mu + \sigma)$ is a point less than one standard deviation away from the mean of the marginal distribution of $t$, that is:
 \begin{eqnarray}
-y(\mu + \sigma) \leq \mu + \sqrt{\mathbb{V}[t]} \nonumber
+y(\mu + \sigma) \leq \bar{t} + \sqrt{\mathbb{V}[t]} \nonumber
 \end{eqnarray}
-Given that $x \sim \mathcal{N}(\mu, \sigma^2)$ and $\varepsilon \sim \mathcal{N}(0, \tau^2)$ are independently distributed from each other:
+Given that $x \sim \mathcal{N}(\mu, \sigma^2)$ and $\varepsilon \sim \mathcal{N}(0, \tau^2)$ are assumed to be uncorrelated:
 \begin{eqnarray}
-\mathbb{V}[t] = \mathbb{V}[x + \varepsilon] = \mathbb{V}[x] + \mathbb{V}[\varepsilon] = \sigma^2 + \tau^2 \nonumber
+\mathbb{E}[t] &=& \mathbb{E}[x + \varepsilon] = \mathbb{E}[x] + \mathbb{E}[\varepsilon] = \mu = \bar{t} \nonumber \\
+\mathbb{V}[t] &=& \mathbb{V}[x + \varepsilon] = \mathbb{V}[x] + \mathbb{V}[\varepsilon] = \sigma^2 + \tau^2 \nonumber
 \end{eqnarray}
-On the other hand:
+We see that $\mu = \bar{t}$ because given the distribution of its components $t$ is a normally (and thus symmetrically) distributed around its mean, and has the same expected value as $x$. On the other hand:
 \begin{eqnarray}
 y(\mu + \sigma) = \mathbb{E}[t | x = \mu + \sigma] = \mu + \sigma \nonumber
 \end{eqnarray}
@@ -63,7 +64,7 @@ y(\mu + \sigma) &\leq& \mu + \sqrt{\mathbb{V}[t]} \nonumber \\
 \sigma^2 &\leq& \sigma^2 + \tau^2  \nonumber \\
 \tau^2 &\geq& 0 \nonumber
 \end{eqnarray}
-And $\tau^2 \geq 0$ is non-negative by construction, thus proved.\\
+We know that $\tau^2 \geq 0$ is indeed non-negative, thus proved.\\
 % EXERCISE 2
 \newpage
 \textbf{\underline{Exercise 2}}\\
