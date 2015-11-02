@@ -69,22 +69,61 @@ We know that $\tau^2 \geq 0$ is indeed non-negative, thus proved.\\
 \newpage
 \textbf{\underline{Exercise 2}}\\
 \newline \underline{Part (a)}\\
-\newline Answer.\\
-\newline \underline{Part (b)}\\
-\newline Answer.\\
+\newline We perform the following transformations to the raw data:
+\begin{itemize}
+\item Unify the fields \texttt{EARN1} and \texttt{EARN2} in one single field, adding an extra field named \texttt{INEXACT} that captures whether we use the precise answer from \texttt{EARN1} or the approximated answer in \texttt{EARN2}.
+\item The resulting variable is called \texttt{EARNT} and is measured in thousands of dollars (e.g. \$10,000 has $\texttt{EARNT} = 10$).
+\item Convert the field \texttt{HEIGHT} to total amount of inches and name it \texttt{HEIGHT\_I}.
+\item Reescale the variable \texttt{SEX} to variable \texttt{MEN}, which takes value 1 if the individual is a man and 0 otherwise.
+\item We suppress individuals with a reported weight greater than 500 (some have 990+ values for answer-codification reasons).
+\item We suppress individuals with a reported height greater than 8 feet (some have 990+ values for answer-codification reasons).
+\item We cut off the individual with highest income, as he reports an income that doubles the second highest income.
+\end{itemize}
+\underline{Part (b)}\\
+\newline The regression run is the following:\\
+\includegraphics[scale=0.7]{reg1.png}
+\newline The resulting parameter for \texttt{HEIGHT\_I} is imperceptibly sensitive to the inclusion of the control variable for exactness of income, although including it does boost the $R^2$ considerably and reduces the residual standard error.\\
+\newline The transformation needed to interpret the intercept as average earnings for people with average height is substracting the mean fro the \texttt{HEIGHT\_I} variable. If we do so the resulting intercept is the following:\\
+\includegraphics[scale=0.7]{reg2.png}
+\newline This states that a person with average height will earn on average an income of  \$28,011 approximately.\\
 \newline \underline{Part (c)}\\
-\newline Answer.\\
+\newline We have run the following models:\\
+\includegraphics[scale=0.5]{reg3.png}
+\newline In the models that use logarithms we only use the observations with positive earnings.\\
+\newline We choose model \texttt{m13} for several reasons. First, the residual standard error is the smallest between within log-linear models; second, it has a relatively high $R^2$ and, third, the regressors are all significant and have an intuitive sign. The results are the following:\\
+\includegraphics[scale=0.7]{reg4.png}
+\newline \\
 \newline \underline{Part (d)}\\
-\newline Answer.
+\newline The results are only for strictly positive income individuals. The interpretation of the coefficients is the following:
+\begin{itemize}
+\item The intercept says that a woman of average height and weight (who would report the exact amount of salary) is expected to earn $1,000 \times \exp{(2.5956)} = \$13,405$.
+\item The coefficient for \texttt{HEIGHT\_I\_ST} says that exceeding the average height by one standard deviation increases the expected income by 8.1\%. Exceeding by two standard deviations would increase the expected salary by 16.2\%, and so on. In the case of men, this is diminished by the coefficient of \texttt{HEIGHT\_I\_ST:MEN}, which sets the total increase for men to 5.7\% when one standard deviation away, although this coefficient is not significant.
+\item The coefficient for \texttt{WEIGHT\_ST} says that exceeding the average weight by one standard deviation decreases the expected income by 7.6\%. In the case of men, this is actually overturned by the coefficient on \texttt{WEIGHT\_ST:MEN}, and the aggregated effect is of +10.9\% on income, so the data shows a negative effect on women and positive on men.
+\item The coefficient on \texttt{MEN} suggests that an man of average height and weight earns on average 27.3\% more than a woman of average height and weight.
+\item The coefficient on \texttt{INEXACT} means that a woman who reports inexact answers is expected to earn 69.9\% more. In the case of men, we add the value of the interaction term to expect an increase of 31.7\% for the average man.
+\end{itemize}
 % EXERCISE 3
 \newpage
 \textbf{\underline{Exercise 3}}\\
 \newline \underline{Part (a)}\\
-\newline Answer.\\
+\newline We generate random draws and plot the result:
+\begin{center}
+\includegraphics[scale=0.6]{plot_ex3dot1.png}
+\end{center}
+\underline{Part (b)}\\
+\newline We take the sample ratio of the simulations we have drawn. We take the quantile of this sample ratio and keep the corresponding quantiles.\\
+\newline For the 50\% case, we take quantiles 25\% and 75\%, leaving 50\% of the sample inside (50\% confidence interval). The interval is $(108.7, 313.7)$\\
+\newline For the 50\% case, we take quantiles 2.5\% and 97.5\%, leaving 95\% of the sample inside (95\% confidence interval). The interval is $(-57.3, 677.9)$.\\
 \newline \underline{Part (b)}\\
-\newline Answer.\\
-\newline \underline{Part (c)}\\
-\newline Answer.
+\newline The plot is the following:
+\begin{center}
+\includegraphics[scale=0.6]{plot_ex3dot3.png}
+\end{center}
+The intervals in this case are the following:
+\begin{itemize}
+\item 50\% confidence interval: $(71.2, 326.9)$.
+\item 95\% confidence interval: $(-1386.8, 2122.8)$.
+\end{itemize}
 % EXERCISE 4
 \newpage
 \textbf{\underline{Exercise 4}}\\
