@@ -1,0 +1,97 @@
+\documentclass[a4paper, 11pt]{article}
+\usepackage{covington}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage[catalan]{babel}
+\usepackage{graphicx}
+\usepackage{eurosym}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{float}
+\usepackage{bm}
+\usepackage{layout}
+\textheight=23.94cm 
+\textwidth=17cm 
+\topmargin=-1cm 
+\oddsidemargin=-0.5cm 
+ 
+\newcommand{\header}[4]{
+	\begin{center}
+		\rule{\linewidth}{0.5pt}
+		
+		{\small{#1}}
+      
+        \vspace{0.2in}
+        
+		{\large{#2}}
+		
+        \vspace{0.2in}
+        
+		{\small{#3}}
+		
+		\vspace{0.15in}
+		
+		{#4}
+		
+		\vspace{-0.1in}
+		\rule{\linewidth}{0.6pt}
+	\end{center}
+}
+
+\begin{document}
+ 
+\header{\sc Barcelona Graduate School of Economics \hfill Master's Degree in Data Science}{\bf Statistical Modeling and Inference $-$ Problem Set \#4}{\sc Niti Mishra $\cdot$ Miquel Torrens $\cdot$ B\'alint V\'an}{November 9\textsuperscript{th}, 2015}
+Solution to proposed exercises.\\
+% EXERCISE 1
+\newline \textbf{\underline{Exercise 1}}\\
+\newline We need to show that $y(\mu + \sigma)$ is a point less than one standard deviation away from the mean of the marginal distribution of $t$, that is:
+\begin{eqnarray}
+y(\mu + \sigma) \leq \mu + \sqrt{\mathbb{V}[t]} \nonumber
+\end{eqnarray}
+Given that $x \sim \mathcal{N}(\mu, \sigma^2)$ and $\varepsilon \sim \mathcal{N}(0, \tau^2)$ are independently distributed from each other:
+\begin{eqnarray}
+\mathbb{V}[t] = \mathbb{V}[x + \varepsilon] = \mathbb{V}[x] + \mathbb{V}[\varepsilon] = \sigma^2 + \tau^2 \nonumber
+\end{eqnarray}
+On the other hand:
+\begin{eqnarray}
+y(\mu + \sigma) = \mathbb{E}[t | x = \mu + \sigma] = \mu + \sigma \nonumber
+\end{eqnarray}
+And so we would need to show that:
+\begin{eqnarray}
+y(\mu + \sigma) &\leq& \mu + \sqrt{\mathbb{V}[t]} \nonumber \\
+\mu + \sigma &\leq& \mu + \sqrt{\sigma^2 + \tau^2} \nonumber \\
+\sigma^2 &\leq& \sigma^2 + \tau^2  \nonumber \\
+\tau^2 &\geq& 0 \nonumber
+\end{eqnarray}
+And $\tau^2 \geq 0$ is non-negative by construction, thus proved.\\
+% EXERCISE 2
+\newpage
+\textbf{\underline{Exercise 2}}\\
+\newline \underline{Part (a)}\\
+\newline Answer.\\
+\newline \underline{Part (b)}\\
+\newline Answer.\\
+\newline \underline{Part (c)}\\
+\newline Answer.\\
+\newline \underline{Part (d)}\\
+\newline Answer.
+% EXERCISE 3
+\newpage
+\textbf{\underline{Exercise 3}}\\
+\newline \underline{Part (a)}\\
+\newline Answer.\\
+\newline \underline{Part (b)}\\
+\newline Answer.\\
+\newline \underline{Part (c)}\\
+\newline Answer.
+% EXERCISE 4
+\newpage
+\textbf{\underline{Exercise 4}}\\
+\newline Answer.
+
+\end{document}
+
+
+
+
+
