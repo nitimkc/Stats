@@ -127,8 +127,35 @@ The intervals in this case are the following:
 % EXERCISE 4
 \newpage
 \textbf{\underline{Exercise 4}}\\
-\newline Answer.
-
+\newline We plot a histogram the district share of democratic votes data for 1988:
+\begin{center}
+\includegraphics[scale=0.5]{plot_ex4_1.png}
+\end{center}
+Districts with less than 10\% share are condensed towards zero and districts with more than 90\% are condensed towards one, as they represent uncontested districts.\\
+\newline We will try to run a linear regression model that predicts the democratic share of vote in 1988 given the share of vote from the previous election and the sign of the party of the incumbent until the election.
+\begin{figure}[H]
+\centering
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[width=1\linewidth]{plot_ex4_2.png}
+\end{subfigure}%
+\begin{subfigure}{.5\textwidth}
+  \centering
+  \includegraphics[width=1\linewidth]{plot_ex4_3.png}
+\end{subfigure}
+\end{figure}
+In the first plot, bolded squares are districts with Republican incumbents in 1988, white squares belong to Democratic incumbents and crosses represent open seats. The line represented is the 45 degree line. In the second plot we show the same picture but correcting for uncontested wins in 1986, adjusting the shares to 75\%-25\% in favor of the 1986 uncontested winner.\\
+\newline The regression is run using only the contested wins in 1988 using the adjusted data. The incumbent variable is coded as follows: $-1$ for Republican holder, $1$ for Democratic holder and $0$ for open seat. The summary of the model is the following:\\
+\newline \\
+\includegraphics[scale=0.7]{plot_ex4_4.png}
+\newline \\
+\newline Now, with these results we would like to estimate the outcome for the following election in 1990. To do this, we use 1,000 predictive simulations drawn with the book's \texttt{sim()} function. We multiply the new data (share of votes of 1988 and incumbent as of 1990) and we multiply it with the coefficients of the predictive simulations (that is, $\mathbf{\Phi}_{90} \mathbf{w}$) and we add normally distributed errors.\\
+\newline The results of this simulations show for each district (total of 435) what will the Democratic share of votes be for each simulation (total of 1,000), thatt is, a $1000 \times 435$ matrix. The districts won uncontested in 1990 have values \texttt{NA} as the model does not predict them. We set these to zero.\\
+\newline The number of elections won by the Democrats in 1990 is predicted using the simple rule of win in case the predicted value is above 50\% and lose otherwise. The results are shown in the book's Figure 7.5, which we approximately replicate here:
+\begin{center}
+\includegraphics[scale=0.7]{plot_ex4_5.png}
+\end{center}
+Gelman and Hill show that the average total wins predicted was actually way off the final result, which was 260, more than three standard deviations away from the mean, so this model does not really look applicable to 1990.
 \end{document}
 
 

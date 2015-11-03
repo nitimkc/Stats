@@ -165,6 +165,7 @@ if (FALSE) {
 
 # Using quantiles
 q.ratio1 <- quantile(p1 / p2, c(0.025, 0.25, 0.75, 0.975))
+#t.test(p1 / p2)
 
 # EXERCISE 3.3 #################################################################
 set.seed(666)
@@ -229,11 +230,13 @@ contested90 <- v90 > 0.1 & v90 < 0.9
 inc90 <- cong90[, 4]
 
 # Plot 7.3
+png(paste(PATH, 'plot_ex4_1.png', sep = ''))
 v88.hist <- ifelse(v88 < 0.1, 1e-04, ifelse(v88 > 0.9, 1 - 1e-04, v88))
 hist(v88.hist, breaks = seq(0, 1, 0.05),
      xlab = "Democratic share of two-party votes", ylab = "", yaxt = "n",
      cex.axis = 1.1, cex.lab = 1.1, cex.main = 1.2, 
      main = "Congress elections (1988)")
+dev.off()
 
 # Model fitting
 v86.adjusted <- ifelse(v86 < 0.1, 0.25, ifelse(v86 > 0.9, 0.75, v86))
@@ -242,41 +245,45 @@ incumbency.88 <- inc88[contested88]
 vote.88 <- v88[contested88]
 
 install.packages('arm')
-library (arm)
+library(arm)
 fit.88 <- lm(vote.88 ~ vote.86 + incumbency.88)
 display(fit.88)
 
 # Figure 7.4
 # (a)
 par(mfrow = c(1, 1))
+png(paste(PATH, 'plot_ex4_2.png', sep = ''))
 par(pty = 's', mar = c(5, 5, 4, 1) + 0.1)
 plot(0, 0, xlim = c(0, 1), ylim = c(0, 1), type = 'n',
-     xlab = 'Democratic vote share in 1986',
-     ylab = 'Democratic vote share in 1988',
+     xlab = 'Democratic share for 1986',
+     ylab = 'Democratic share for 1988',
      cex.lab = 1)
 abline (0, 1, lwd = 0.5)
 j.v86 <- ifelse(contested86, v86, jitter(v86, 0.02))
 j.v88 <- ifelse(contested88, v88, jitter(v88, 0.02))
-points(j.v86[inc88 == 0], j.v88[inc88 == 0], pch = 1)
-points(j.v86[inc88 == 1], j.v88[inc88 == 1], pch = 16)
-points(j.v86[inc88 == -1], j.v88[inc88 == -1], pch = 4)
-mtext("Raw data (jittered at 0 and 1)", line = 1, cex = 1.2)
+points(j.v86[inc88 == 0], j.v88[inc88 == 0], pch = 4)
+points(j.v86[inc88 == 1], j.v88[inc88 == 1], pch = 0)
+points(j.v86[inc88 == -1], j.v88[inc88 == -1], pch = 15)
+mtext("Election results across years", line = 1, cex = 1.2)
+dev.off()
 
 # (b)
+png(paste(PATH, 'plot_ex4_3.png', sep = ''))
 par(pty = 's', mar = c(5, 5, 4, 1) + 0.1)
 plot (0, 0, xlim = c(0, 1), ylim = c(0, 1), type = "n",
-      xlab = "Democratic vote share in 1986",
-      ylab = "Democratic vote share in 1988",
+      xlab = "Democratic share for 1986",
+      ylab = "Democratic share for 1988",
       cex.lab = 1)
 abline(0, 1, lwd = 0.5)
-v86.adjusted <- ifelse (v86 < 0.1, 0.25, ifelse(v86 > 0.9, 0.75, v86))
+v86.adjusted <- ifelse(v86 < 0.1, 0.25, ifelse(v86 > 0.9, 0.75, v86))
 vote.86 <- v86.adjusted[contested88]
 vote.88 <- v88[contested88]
 incumbency.88 <- inc88[contested88]
-points(vote.86[incumbency.88 == 0], vote.88[incumbency.88 == 0], pch = 1)
-points(vote.86[incumbency.88 == 1], vote.88[incumbency.88 == 1], pch = 16)
-points(vote.86[incumbency.88 == -1], vote.88[incumbency.88 == -1], pch = 4)
-mtext("Adjusted data (imputing 0's and 1's to .75)", line = 1, cex = 1.2)
+points(vote.86[incumbency.88 == 0], vote.88[incumbency.88 == 0], pch = 4)
+points(vote.86[incumbency.88 == 1], vote.88[incumbency.88 == 1], pch = 0)
+points(vote.86[incumbency.88 == -1], vote.88[incumbency.88 == -1], pch = 15)
+mtext("Adjusted results (correcting uncontested wins to 75%)", line = 1, cex = 1.2)
+dev.off()
 
 # Simulation for predicting new data points
 incumbency.90 <- inc90
@@ -294,17 +301,29 @@ for (s in 1:n.sims) {
 }
 
 # Predictive simulation for a nonlinear function of new data
+y.tilde.new <- ifelse(y.tilde == 'NaN', 0, y.tilde)
 y.tilde.new[is.na(y.tilde)] <- 0
-#y.tilde.new <- ifelse(y.tilde == 'NaN', 0, y.tilde)
 loop <- FALSE
 if (loop == FALSE) {
   dems.tilde <- rowSums(y.tilde.new > 0.5)	
 } else {
   dems.tilde <- rep (NA, n.sims)
-  for (s in 1:n.sims){
+  for (s in 1:n.sims) {
   	dems.tilde[s] <- sum (y.tilde.new[s,] > .5)
   }
 }
+
+# Figure 7.5
+library(miscTools)
+aux <- cbind(sim.88@coef, y.tilde.new, dems.tilde)
+aux2 <- aux[1:10, c(1:8, ncol(aux))]
+aux3 <- rbind(aux2[1:10, ], colMeans(aux2), colMedians(aux2), apply(aux2, 2, sd))
+aux3 <- as.data.frame(aux3)
+aux3 <- apply(aux3, 2, round, 4)
+aux3[, ncol(aux3)] <- round(aux3[, ncol(aux3)], 1)
+rownames(aux3) <- c(paste('simulation', 1:10, sep = ''), 'mean', 'median', 'sd')
+colnames(aux3) <- c('beta0', 'beta1', 'beta2', 'pred_y1', 'pred_y2', 'pred_y3',
+	                  'pred_y4', 'pred_y5', 'pred_dem_wins')
 
 # Implementation using functions
 Pred.88 <- function (X.pred, lm.fit) {
