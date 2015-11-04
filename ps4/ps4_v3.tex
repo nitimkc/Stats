@@ -151,11 +151,16 @@ In the first plot, bolded squares are districts with Republican incumbents in 19
 \newline \\
 \newline Now, with these results we would like to estimate the outcome for the following election in 1990. To do this, we use 1,000 predictive simulations drawn with the book's \texttt{sim()} function. We multiply the new data (share of votes of 1988 and incumbent as of 1990) and we multiply it with the coefficients of the predictive simulations (that is, $\mathbf{\Phi}_{90} \mathbf{w}$) and we add normally distributed errors.\\
 \newline The results of this simulations show for each district (total of 435) what will the Democratic share of votes be for each simulation (total of 1,000), thatt is, a $1000 \times 435$ matrix. The districts won uncontested in 1990 have values \texttt{NA} as the model does not predict them. We set these to zero.\\
-\newline The number of elections won by the Democrats in 1990 is predicted using the simple rule of win in case the predicted value is above 50\% and lose otherwise. The results are shown in the book's Figure 7.5, which we approximately replicate here:
+\newline The number of elections won by the Democrats in 1990 is predicted using the simple rule of win in case the predicted value is above 50\% and lose otherwise. The results are shown in the book's Figure 7.5, which we approximately replicate here, showing the prediction for the first five districts and the 10 first simulations:
 \begin{center}
 \includegraphics[scale=0.7]{plot_ex4_5.png}
 \end{center}
-Gelman and Hill show that the average total wins predicted was actually way off the final result, which was 260, more than three standard deviations away from the mean, so this model does not really look applicable to 1990.
+Gelman and Hill show that the average total wins predicted was actually way off the final result, which was 260, more than three standard deviations away from the mean, so this model does not really look applicable to 1990.\\
+\newline In the final part of 7.3 they also try to find a way to find the probability of extreme rare events, and they look to find the probability of a tie. We use their approach to put this theory into practice, and use the means and standard deviations of the simulations of the outcome to predict what is the probability of the actual result falling within the interval $0.5 \pm 1 / (2 n_i)$, where $n_i$ is the number of votes in each district (we use the votes from 1988 in the prediction of 1990). As expected, almost for all districts this probability is extremly small. The histogram of the results is the following:
+\begin{center}
+\includegraphics[scale=0.7]{plot_ex4_6.png}
+\end{center}
+
 \end{document}
 
 

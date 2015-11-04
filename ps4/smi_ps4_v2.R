@@ -52,17 +52,10 @@ colnames(wfw) <- cols
 ################################################################################
 # EXERCISE 2
 # EXERCISE 2.1 #################################################################
-dta <- wfw[, c('EARN1', 'EARN2', 'SEX', 'HEIGHT', 'WEIGHT')]
+dta <- wfw[, c('EARN1', 'SEX', 'HEIGHT', 'WEIGHT')]
 
 # Define total earnings
-dta[, 'EARNT'] <- apply(dta, 1, function(x) {
-  #sum(x['EARN1'], 1e3 * x['EARN2'], na.rm = TRUE)
-  sum(x['EARN1'] / 1e3, x['EARN2'], na.rm = TRUE)
-})
-
-# Indicator on whether the earnings are exact or not
-dta[, 'INEXACT'] <- 1
-dta[which(! is.na(dta[, 'EARN1'])), 'INEXACT'] <- 0
+colnames(dta)[1] <- 'EARNT'
 
 # Set height in inches
 dta[, 'HEIGHT_I'] <- 12 * as.numeric(substr(dta[, 'HEIGHT'], 1, 1)) +
@@ -70,11 +63,12 @@ dta[, 'HEIGHT_I'] <- 12 * as.numeric(substr(dta[, 'HEIGHT'], 1, 1)) +
 
 # Set sex as 0/1 binary
 dta[, 'MEN'] <- ifelse(dta[, 'SEX'] == 1, 1, 0)
+dta[, 'SEX'] <- NULL
 
 # Clean data set of extreme values
 dta <- dta[which(dta[, 'WEIGHT'] < 500), ]
 dta <- dta[which(dta[, 'HEIGHT'] < 800), ]
-dta <- dta[which(dta[, 'EARNT'] < 300), ]
+dta <- dta[which(dta[, 'EARNT'] > 0 & dta[, 'EARNT'] < 3e5), ]
 
 # EXERCISE 2.2 #################################################################
 # Define centered variables
@@ -87,42 +81,27 @@ dta[, 'HEIGHT_I_ST'] <- (dta[, 'HEIGHT_I'] - mean(dta[, 'HEIGHT_I'])) / sd(dta[,
 dta[, 'WEIGHT_ST'] <- (dta[, 'WEIGHT'] - mean(dta[, 'WEIGHT'])) / sd(dta[, 'WEIGHT'])
 
 # Linear model
-m00 <- lm(EARNT ~ HEIGHT_I + INEXACT, data = dta)
 m01 <- lm(EARNT ~ HEIGHT_I, data = dta)
 m02 <- lm(EARNT ~ HEIGHT_I_C, data = dta)
-#m02 <- lm(EARNT_C ~ HEIGHT_I_C + EXACT, data = dta)
 
 # EXERCISE 2.3 #################################################################
-dta2 <- dta[which(dta[, 'EARNT'] > 0), ]
-
 # Linear-linear
-m03 <- lm(EARNT ~ HEIGHT_I + WEIGHT + MEN + INEXACT, data = dta)
-m04 <- lm(EARNT ~ HEIGHT_I + WEIGHT + MEN, data = dta)
-m05 <- lm(EARNT ~ HEIGHT_I + WEIGHT + MEN + WEIGHT * MEN + HEIGHT_I * MEN + INEXACT, data = dta)
-m06 <- lm(EARNT ~ HEIGHT_I + WEIGHT + MEN + WEIGHT * MEN + HEIGHT_I * MEN, data = dta)
+m03 <- lm(EARNT ~ HEIGHT_I + WEIGHT + MEN, data = dta)
+m04 <- lm(EARNT ~ HEIGHT_I + WEIGHT + MEN + WEIGHT * MEN + HEIGHT_I * MEN, data = dta)
 
 # Log-linear
-m07 <- lm(log(EARNT) ~ HEIGHT_I + WEIGHT + MEN + WEIGHT * MEN, data = dta2)
-m08 <- lm(log(EARNT) ~ HEIGHT_I + WEIGHT + MEN + WEIGHT * MEN + INEXACT, data = dta2)
-m09 <- lm(log(EARNT) ~ HEIGHT_I + WEIGHT + MEN + WEIGHT * MEN + HEIGHT * MEN, data = dta2)
-m10 <- lm(log(EARNT) ~ HEIGHT_I + WEIGHT + MEN + WEIGHT * MEN, data = dta2)
-m11 <- lm(log(EARNT) ~ HEIGHT_I_ST + WEIGHT_ST + MEN + WEIGHT_ST * MEN + INEXACT, data = dta2)
-m12 <- lm(log(EARNT) ~ HEIGHT_I_ST + WEIGHT_ST + MEN + WEIGHT_ST * MEN + HEIGHT_I_ST * MEN + INEXACT, data = dta2)
-m13 <- lm(log(EARNT) ~ HEIGHT_I_ST + WEIGHT_ST + MEN + WEIGHT_ST * MEN + HEIGHT_I_ST * MEN + INEXACT * MEN, data = dta2) # !!!
-#m13 <- lm(log(EARNT) ~ HEIGHT_I_ST + WEIGHT_ST + MEN + WEIGHT_ST * MEN + HEIGHT_I_ST * MEN + INEXACT, data = dta2)
-m14 <- lm(log(EARNT) ~ HEIGHT_I_ST + WEIGHT_ST + MEN + WEIGHT_ST * MEN + HEIGHT_I_ST * MEN, data = dta2)
-m15 <- lm(log(EARNT) ~ HEIGHT_I + WEIGHT + MEN + WEIGHT * MEN + HEIGHT_I * MEN + INEXACT, data = dta2)
-m16 <- lm(log(EARNT) ~ HEIGHT_I + WEIGHT + MEN + WEIGHT * MEN + INEXACT, data = dta2)
-m17 <- lm(log(EARNT) ~ HEIGHT_I + WEIGHT + MEN + INEXACT, data = dta2)
-m18 <- lm(log(EARNT) ~ HEIGHT_I + WEIGHT + MEN, data = dta2)
-m19 <- lm(log(EARNT) ~ HEIGHT_I + WEIGHT + MEN + WEIGHT * MEN + HEIGHT_I * MEN + INEXACT, data = dta2)
-m20 <- lm(log(EARNT) ~ HEIGHT_I + WEIGHT + MEN + WEIGHT * MEN + HEIGHT_I * MEN, data = dta2)
+m05 <- lm(log(EARNT) ~ HEIGHT_I + WEIGHT + MEN + WEIGHT * MEN, data = dta)
+m06 <- lm(log(EARNT) ~ HEIGHT_I + WEIGHT + MEN + WEIGHT * MEN + HEIGHT * MEN, data = dta)
+m07 <- lm(log(EARNT) ~ HEIGHT_I + WEIGHT + MEN + WEIGHT * MEN, data = dta)
+m08 <- lm(log(EARNT) ~ HEIGHT_I_ST + WEIGHT_ST + MEN + WEIGHT_ST * MEN + HEIGHT_I_ST * MEN, data = dta)
+m09 <- lm(log(EARNT) ~ HEIGHT_I + WEIGHT + MEN, data = dta)
+m10 <- lm(log(EARNT) ~ HEIGHT_I + WEIGHT + MEN + WEIGHT * MEN + HEIGHT_I * MEN, data = dta)
 
 # Log-log
-m21 <- lm(log(EARNT) ~ log(HEIGHT_I) + log(WEIGHT) + MEN + INEXACT, data = dta2)
+m11 <- lm(log(EARNT) ~ log(HEIGHT_I) + log(WEIGHT) + MEN, data = dta)
 
 # Evaluate R-squared
-for (i in sprintf('%02.0f', 1:21)) {
+for (i in sprintf('%02.0f', 1:11)) {
   mod <- get(paste0('m', i))
   cat('m', i, ': ', round(summary(mod)$adj.r.squared, 4), ' resid: ',
   		round(sqrt(deviance(mod) / df.residual(mod)), 2), '\n', sep = '')
@@ -338,4 +317,22 @@ Pred.88 <- function (X.pred, lm.fit) {
 
 y.tilde <- replicate(1000, Pred.88(X.tilde, fit.88))
 dems.tilde <- replicate(1000, Pred.88(X.tilde, fit.88) > 0.5)
+
+# Calculating the probability of a tie
+yp.means <- colMeans(y.tilde.new)
+yp.sd <- apply(y.tilde.new, 2, sd)
+votes <- rowSums(cong88[, 5:6])
+probs <- rep(NA, length = length(yp.means))
+for (i in 1:length(yp.means)) {
+	upper <- pnorm(0.5 + (1 / (2 * votes[i])), mean = yp.means[i], sd = yp.sd[i])
+	lower <- pnorm(0.5 - (1 / (2 * votes[i])), mean = yp.means[i], sd = yp.sd[i])
+	probs[i] <- upper - lower
+}
+
+png(paste(PATH, 'plot_ex4_6.png', sep = ''))
+hist(probs, breaks = 50, col = 'blue',
+	   xlab = 'Individual district probability of a tie',
+	   ylab = 'Frequency of districts',
+	   main = 'Probability estimation per district')
+dev.off()
 # END OF SCRIPT
