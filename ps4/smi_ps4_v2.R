@@ -7,7 +7,7 @@
 # Author : (c) Miquel Torrens
 # Date   : 2015.11.01
 ################################################################################
-# source('/Users/miquel/Desktop/bgse/courses/term1/smi/ps/ps4/smi_ps4_v1.R')
+# source('/Users/miquel/Desktop/bgse/courses/term1/smi/ps/ps4/smi_ps4_v2.R')
 ################################################################################
 
 # Path
@@ -315,15 +315,15 @@ if (loop == FALSE) {
 
 # Figure 7.5
 library(miscTools)
-aux <- cbind(sim.88@coef, y.tilde.new, dems.tilde)
-aux2 <- aux[1:10, c(1:8, ncol(aux))]
+aux <- cbind(sim.88@sigma, sim.88@coef, y.tilde.new, dems.tilde)
+aux2 <- aux[1:10, c(1:9, ncol(aux))]
 aux3 <- rbind(aux2[1:10, ], colMeans(aux2), colMedians(aux2), apply(aux2, 2, sd))
 aux3 <- as.data.frame(aux3)
 aux3 <- apply(aux3, 2, round, 4)
 aux3[, ncol(aux3)] <- round(aux3[, ncol(aux3)], 1)
 rownames(aux3) <- c(paste('simulation', 1:10, sep = ''), 'mean', 'median', 'sd')
-colnames(aux3) <- c('beta0', 'beta1', 'beta2', 'pred_y1', 'pred_y2', 'pred_y3',
-	                  'pred_y4', 'pred_y5', 'pred_dem_wins')
+colnames(aux3) <- c('sigma', 'beta0', 'beta1', 'beta2', 'pred_y1', 'pred_y2',
+	                  'pred_y3', 'pred_y4', 'pred_y5', 'pred_dem_wins')
 
 # Implementation using functions
 Pred.88 <- function (X.pred, lm.fit) {
