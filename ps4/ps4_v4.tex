@@ -40,7 +40,7 @@
 
 \begin{document}
  
-\header{\sc Barcelona Graduate School of Economics \hfill Master's Degree in Data Science}{\bf Statistical Modeling and Inference $-$ Problem Set \#4}{\sc Niti Mishra $\cdot$ Miquel Torrens $\cdot$ B\'alint V\'an}{November 9\textsuperscript{th}, 2015}
+\header{\sc Barcelona Graduate School of Economics \hfill Master's Degree in Data Science}{\bf Statistical Modeling and Inference $-$ Problem Set \#4}{\sc Group 3: Niti Mishra $\cdot$ Miquel Torrens $\cdot$ B\'alint V\'an}{November 9\textsuperscript{th}, 2015}
 Solution to proposed exercises.\\
 % EXERCISE 1
 \newline \textbf{\underline{Exercise 1}}\\
@@ -53,7 +53,8 @@ Given that $x \sim \mathcal{N}(\mu, \sigma^2)$ and $\varepsilon \sim \mathcal{N}
 \mathbb{E}[t] &=& \mathbb{E}[x + \varepsilon] = \mathbb{E}[x] + \mathbb{E}[\varepsilon] = \mu = \bar{t} \nonumber \\
 \mathbb{V}[t] &=& \mathbb{V}[x + \varepsilon] = \mathbb{V}[x] + \mathbb{V}[\varepsilon] = \sigma^2 + \tau^2 \nonumber
 \end{eqnarray}
-We see that $\mu = \bar{t}$ because given the distribution of its components $t$ is a normally (and thus symmetrically) distributed around its mean, and has the same expected value as $x$. On the other hand:
+Note $t$ is normally distributed around its mean with the same expected value as $x$, and so $\mu = \bar{t}$.\\
+\newline On the other hand:
 \begin{eqnarray}
 y(\mu + \sigma) = \mathbb{E}[t | x = \mu + \sigma] = \mu + \sigma \nonumber
 \end{eqnarray}
@@ -76,9 +77,9 @@ We know that $\tau^2 \geq 0$ is indeed non-negative, thus proved.\\
 \item We suppress individuals with a reported weight greater than 500, that is, those with values 998 and 999 which are not valid.
 \item We suppress individuals with a reported height greater than 8 feet, that is, those with values 998 and 999 which are not valid.
 \item We preventively cut off the individual with highest income, as he reports an income that doubles the second highest income (potentially an outlier).
-\item We cut off individuals with no income or with income only declared approximately, i.e. we contemplate valid answers in the variable \texttt{EARN1}.
+\item We cut off individuals with no income or with income declared only approximately, i.e. we contemplate valid answers in the variable \texttt{EARN1}.
 \end{itemize}
-Additionally, a first approach was to unify the fields \texttt{EARN1} and \texttt{EARN2} in one single field, adding an extra dummy field named \texttt{INEXACT} that captured whether we use the precise answer from \texttt{EARN1} or the approximated answer in \texttt{EARN2}. The following results were slightly better and we had a bigger sample, but the interpretability of the model became much less intuitive and prediction lost sense, thus we finally decided to work with only precise declared outcomes. This is also the approach taken by the book.\\
+A first approach was to unify the fields \texttt{EARN1} and \texttt{EARN2} in one single field, adding an extra dummy field named \texttt{INEXACT}. The results were just slightly better, but the interpretability of the model became much less intuitive, thus we finally decided to work with precise declared outcomes only. This is also the approach taken by the book.\\
 \newline \underline{Part (b)}\\
 \newline The regression run is the following:\\
 \includegraphics[scale=0.7]{reg1.png}
@@ -98,8 +99,8 @@ Additionally, a first approach was to unify the fields \texttt{EARN1} and \textt
 \newline The results are only for strictly positive income individuals. The interpretation of the coefficients is the following:
 \begin{itemize}
 \item The intercept says that a woman of average height and weight is expected to earn $\exp{(9.5129)} \approx \$13,533$.
-\item The coefficient for \texttt{HEIGHT\_I\_ST} says that for an average weight woman exceeding the average height by one standard deviation increases the expected income by 10.8\%. Exceeding by two standard deviations would increase the expected salary by 21.6\%, and so on. In the case of the average weight men, this is diminished by the coefficient of \texttt{HEIGHT\_I\_ST:MEN}, which sets the total increase for men to 1.4\% when one standard deviation away, although this coefficient is not significant, so in fact it is likely that there is no different effect for men and women whatsoever.
-\item The coefficient for \texttt{WEIGHT\_ST} says that for an average height woman exceeding the average weight by one standard deviation decreases the expected income by 9.7\%. In the case of average height men, this is actually overturned by the coefficient on \texttt{WEIGHT\_ST:MEN}, and the aggregated effect is of +14.4\% on income, so the data shows a negative effect on women and positive one on men.
+\item The coefficient for \texttt{HEIGHT\_I\_ST} says that for an average weight woman exceeding the average height by one standard deviation increases the expected income by 10.8\%. In the case of the average weight men, this is diminished by the coefficient of \texttt{HEIGHT\_I\_ST:MEN}, which sets the total increase for men to 1.4\% when one standard deviation away, although this coefficient is not significant.
+\item The coefficient for \texttt{WEIGHT\_ST} says that for an average height woman exceeding the average weight by one standard deviation decreases the expected income by 9.7\%. In the case of average height men, this is actually overturned by the coefficient on \texttt{WEIGHT\_ST:MEN}, with an aggregated effect is +14.4\% on income, so the data shows a negative effect on women and positive on men.
 \item The coefficient on \texttt{MEN} suggests that an man of average height and weight earns on average 41.7\% more than a woman of average height and weight.
 \end{itemize}
 % EXERCISE 3
@@ -156,7 +157,7 @@ In the first plot, bolded squares are districts with Republican incumbents in 19
 \includegraphics[scale=0.7]{plot_ex4_5.png}
 \end{center}
 Gelman and Hill show that the average total wins predicted was actually way off the final result, which was 260, more than three standard deviations away from the mean, so this model does not really look applicable to 1990.\\
-\newline In the final part of 7.3 they also try to find a way to find the probability of extreme rare events, and they look to find the probability of a tie. We use their approach to put this theory into practice, and use the means and standard deviations of the simulations of the outcome to predict what is the probability of the actual result falling within the interval $0.5 \pm 1 / (2 n_i)$, where $n_i$ is the number of votes in each district (we use the votes from 1988 in the prediction of 1990). As expected, almost for all districts this probability is extremly small. The histogram of the results is the following:
+\newline In the final part of 7.3 they also try to find a way to find the probability of extreme rare events, and they look to find the probability of a tie. We use their approach and use the means and standard deviations of the simulations of the outcome to predict what is the probability of the actual result falling within the interval $0.5 \pm 1 / (2 n_i)$, where $n_i$ is the number of votes in each district. We use the votes from 1988 in the prediction of 1990. As expected, almost for all districts this probability is extremly small. The histogram of the results is the following:
 \begin{center}
 \includegraphics[scale=0.7]{plot_ex4_6.png}
 \end{center}
