@@ -67,7 +67,7 @@ Thus with the normal distribution: $q = q$, $\theta = \mu$ and $c(\theta) = \fra
 &=& \exp \left\{ z \log{p} + (1-z) \log{(1-p)} \right\} \nonumber \\
 &=& \exp \left\{ z \log \left( \frac{p}{1-p} \right) + \log{(1-p)} \right\} \nonumber
 \end{eqnarray}
-Mimetizing the analysis in (3), this implies that $q=1$, $\theta = \log \left( \frac{p}{1-p} \right)$ and that $c(\theta) = -\log{(1-p)}$. Also note that:
+Mimetizing the analysis in (3), we have that $q=1$, $\theta = \log \left( \frac{p}{1-p} \right)$ and that $c(\theta) = -\log{(1-p)}$. Also note that:
 \begin{eqnarray}
 \theta = \log \left( \frac{p}{1-p} \right) \Leftrightarrow p = \frac{e^\theta}{1 + e^\theta}.
 \end{eqnarray}
@@ -79,14 +79,14 @@ For the \textbf{binomial} distribution:
 &=& \exp \left\{ n \left[ \frac{z}{n} \log\left( \frac{p}{1-p} \right) + \log{(1-p)} \right] + \log{n \choose z} \right\} \nonumber
 %%&=& \exp \left\{ \right\} \nonumber \\
 \end{eqnarray}
-So, for the binomial $q=n$, $\theta = \log \left( \frac{p}{1-p} \right)$ and $c(\theta) = -\log{(1-p)}$.\\
+We adapted the objective variable to proportion of successes $z/n$, obtaining for the binomial: $q=n$, $\theta = \log \left( \frac{p}{1-p} \right)$ and $c(\theta) = -\log{(1-p)}$.\\
 \newline Finally, for the \textbf{Poisson} distribution:
 \begin{eqnarray}
 \text{Pois}(z | \lambda) &=& \frac{\lambda^z e^{-\lambda}}{z!} \nonumber \\
 &=& \exp \left\{ z \log \lambda - \lambda - \log z! \right\} \nonumber \\
 &=& \exp \left\{ [z \log \lambda - \lambda] - \log z! \right\} \nonumber
 \end{eqnarray}
-And using (3) that means that for Poisson $q = 1$, $\theta = \log \lambda$ and $c(\theta) =\lambda$.\\
+And using (1) that means that for Poisson $q = 1$, $\theta = \log \lambda$ and $c(\theta) =\lambda$.\\
 \newline \underline{Part (b)}\\
 \newline The procedure to obtain the canonical links is the following:
 \begin{itemize}
@@ -101,7 +101,7 @@ This means that $c'(\theta) = \theta$, $c''(\theta) = 1$ and $V^{-1}(\mu) = 1$. 
 \begin{eqnarray}
 g(\mu) = \int d\mu = \mu. \nonumber
 \end{eqnarray}
-For the \textbf{Bernouilli} and \textbf{binomial} distributions, recall (4):
+For the \textbf{Bernouilli} and \textbf{binomial} distributions, which share $c(\theta)$, recall (4):
 \begin{eqnarray}
 c(\theta) = -\log{(1-p)} = -\log{\left( 1 - \frac{e^\theta}{1+e^\theta} \right)} = -\log{\left( \frac{1}{1+e^\theta} \right)} = \log{(1 + e^\theta)} \nonumber
 \end{eqnarray}
@@ -126,7 +126,27 @@ This implies:
 g(\lambda) = \int \lambda^{-1} d\lambda = \log \lambda. \nonumber
 \end{eqnarray}
 \newline \underline{Part (c)}\\
-\newline Answer. \\
+\newline The likelihood function is the following:
+\begin{eqnarray}
+\mathcal{L} \left( \text{NdEF}( t_n | \theta (\mathbf{x}_n, \mathbf{w}), q \gamma_n ) \right) &=& \prod_{n=1}^{N} \exp \left\{ \gamma_n q [ t_n \theta_n - c(\theta_n) ] + h(t_n, q \gamma_n) \right\} \nonumber \\
+&=& \exp \left\{ \sum_{n=1}^{N} \gamma_n q [ t_n \theta_n - c(\theta_n) ] + h(t_n, q \gamma_n) \right\}. \nonumber
+\end{eqnarray}
+\newline Then the log-likelihood:
+\begin{eqnarray}
+\log \mathcal{L} \left( \text{NdEF}( t_n | \theta (\mathbf{x}_n, \mathbf{w}), q \gamma_n ) \right) = \sum_{n=1}^{N} \gamma_n q [ t_n \theta_n - c(\theta_n) ] + h(t_n, q \gamma_n). \nonumber
+\end{eqnarray}
+Under the canonical link: $\theta(\mathbf{x}_n, \mathbf{w}) = \phi(\mathbf{x}_n)^T \mathbf{w}$, therefore:
+\begin{eqnarray}
+\log \mathcal{L} \left( \text{NdEF}( t_n | \theta (\mathbf{x}_n, \mathbf{w}), q \gamma_n ) \right) &=& \sum_{n=1}^{N} \gamma_n q [ t_n \phi(\mathbf{x}_n)^T \mathbf{w} - c(\phi(\mathbf{x}_n)^T \mathbf{w}) ] + h(t_n, q \gamma_n) \nonumber \\
+&=& \sum_{n=1}^{N} \gamma_n q t_n \phi(\mathbf{x}_n)^T \mathbf{w} + h(t_n, q \gamma_n) - \sum_{n=1}^{N} \gamma_n q c(\phi(\mathbf{x}_n)^T \mathbf{w}) \nonumber
+\end{eqnarray}
+The left part of this result, the positive sum, is linear. If the right-handed sum is convex, then the negative of this sum is concave. We use the second derivative:
+\begin{eqnarray}
+\frac{\partial c(\theta)}{\partial \theta_n} &=& \mathbb{E}[t_n] \nonumber \\
+\frac{\partial^2 c(\theta)}{\partial \theta_{n}^{2}} &=& \mathbb{E}[t_n^2] - \mathbb{E}[t_n]^2 = \mathbb{V}[t_n] \nonumber \\
+\frac{\partial^2 c(\theta)}{\partial \theta_n \partial \theta_m} &=&\mathbb{E}[t_n t_m] - \mathbb{E}[t_n] \mathbb{E}[t_m] = \text{cov}[t_n, t_m] \nonumber
+\end{eqnarray}
+This final derivative evaluated for all pairs $n, m \in [1, N]$ produces the Hessian covariance matrix. The covariance matrix is positive semi-definite, and thus log-convex. Its negative is log-concave. Therefore, the log-likelihood function is log-concave.\\
 % EXERCISE 2
 \newpage
 \textbf{\underline{Exercise 2}}\\
