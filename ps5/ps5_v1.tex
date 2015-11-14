@@ -1,0 +1,196 @@
+\documentclass[a4paper, 11pt]{article}
+\usepackage{covington}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage[catalan]{babel}
+\usepackage{graphicx}
+\usepackage{eurosym}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{float}
+\usepackage{bm}
+\usepackage{layout}
+\textheight=23.94cm 
+\textwidth=17cm 
+\topmargin=-1cm 
+\oddsidemargin=-0.5cm 
+ 
+\newcommand{\header}[4]{
+	\begin{center}
+		\rule{\linewidth}{0.5pt}
+		
+		{\small{#1}}
+      
+        \vspace{0.2in}
+        
+		{\large{#2}}
+		
+        \vspace{0.2in}
+        
+		{\small{#3}}
+		
+		\vspace{0.15in}
+		
+		{#4}
+		
+		\vspace{-0.1in}
+		\rule{\linewidth}{0.6pt}
+	\end{center}
+}
+
+\begin{document}
+ 
+\header{\sc Barcelona Graduate School of Economics \hfill Master's Degree in Data Science}{\bf Statistical Modeling and Inference $-$ Problem Set \#5}{\sc Group 3: Niti Mishra $\cdot$ Miquel Torrens $\cdot$ B\'alint V\'an}{November 23\textsuperscript{rd}, 2015}
+Solution to proposed exercises.\\
+% EXERCISE 1
+\newline \textbf{\underline{Exercise 1}}\\
+\newline \underline{Part (a)}\\
+\newline We define:
+\begin{eqnarray}
+\text{NdEF}(z | \theta, q) \equiv p(z | \theta, q) = \exp \lbrace q [z \theta - c(\theta)] + h(z,q) \rbrace
+\end{eqnarray}
+Let's start by the \textbf{normal} distribution:
+\begin{eqnarray}
+\mathcal{N}(z | \mu, q) &=& \frac{q}{\sqrt{2 \pi}} \exp \left\{ -\frac{q}{2} (z - \mu)^2 \right\}  \nonumber \\
+&=& \frac{q}{\sqrt{2 \pi}} \exp \left\{ -\frac{1}{2} q (z^2 + \mu^2 - 2z\mu) \right\}  \nonumber \\
+&=& \frac{q}{\sqrt{2 \pi}} \exp \left\{ q \left[z \mu -\frac{1}{2} \left( z^2 + \mu^2 \right) \right] \right\}  \nonumber \\
+&=& \exp \left\{ q \left[ z \mu - \frac{1}{2} \mu^2 \right] + \log \left(  \frac{q}{\sqrt{2 \pi}} \right) - \frac{1}{2} q z^2  \right\}
+\end{eqnarray}
+Now using (1) we can see the following in (2):
+\begin{eqnarray}
+\mathcal{N}(z | \mu, q) = \exp \left\{ \underbrace{q}_{= q} \left[ z \underbrace{\mu}_{=\theta} - \underbrace{\frac{1}{2} \mu^2}_{=c(\theta)} \right]   + \underbrace{\log \left( \frac{q}{\sqrt{2 \pi}} \right) - \frac{1}{2} q z^2}_{=h(z,q)}  \right\}
+\end{eqnarray}
+Thus with the normal distribution: $q = q$, $\theta = \mu$ and $c(\theta) = \frac{1}{2} \mu^2$.\\
+\newline For the \textbf{Bernouilli} distribution:
+\begin{eqnarray}
+\text{Bern}(z | p) &=& p^z (1-p)^{1-z}  \nonumber \\
+&=& \exp \left\{ z \log{p} + (1-z) \log{(1-p)} \right\} \nonumber \\
+&=& \exp \left\{ z \log \left( \frac{p}{1-p} \right) + \log{(1-p)} \right\} \nonumber
+\end{eqnarray}
+Mimetizing the analysis in (3), this implies that $q=1$, $\theta = \log \left( \frac{p}{1-p} \right)$ and that $c(\theta) = -\log{(1-p)}$. Also note that:
+\begin{eqnarray}
+\theta = \log \left( \frac{p}{1-p} \right) \Leftrightarrow p = \frac{e^\theta}{1 + e^\theta}.
+\end{eqnarray}
+For the \textbf{binomial} distribution:
+\begin{eqnarray}
+\text{Bin}(z | n,p) &=& {n \choose z} p^z (1-p)^{n-z}   \nonumber \\
+&=& \exp \left\{ \log{n \choose z} + z \log p + (n-z) \log{(1-p)} \right\} \nonumber \\
+&=& \exp \left\{ z \log \left( \frac{p}{1-p} \right) + n \log{(1-p)} + \log{n \choose z} \right\} \nonumber \\
+&=& \exp \left\{ n \left[ \frac{z}{n} \log\left( \frac{p}{1-p} \right) + \log{(1-p)} \right] + \log{n \choose z} \right\} \nonumber
+%%&=& \exp \left\{ \right\} \nonumber \\
+\end{eqnarray}
+So, for the binomial $q=n$, $\theta = \log \left( \frac{p}{1-p} \right)$ and $c(\theta) = -\log{(1-p)}$.\\
+\newline Finally, for the \textbf{Poisson} distribution:
+\begin{eqnarray}
+\text{Pois}(z | \lambda) &=& \frac{\lambda^z e^{-\lambda}}{z!} \nonumber \\
+&=& \exp \left\{ z \log \lambda - \lambda - \log z! \right\} \nonumber \\
+&=& \exp \left\{ [z \log \lambda - \lambda] - \log z! \right\} \nonumber
+\end{eqnarray}
+And using (3) that means that for Poisson $q = 1$, $\theta = \log \lambda$ and $c(\theta) =\lambda$.\\
+\newline \underline{Part (b)}\\
+\newline The procedure to obtain the canonical links is the following:
+\begin{itemize}
+\item Compute the variance function: $V(\mathbb{E}[z]) = c''(\theta)$.
+\item Obtain the canonical link function $g(\mathbb{E}[z]) = \int V^{-1}(\mathbb{E}[z]) d\mathbb{E}[z]$.
+\end{itemize}
+For the \textbf{normal} distribution, where $\theta = \mu$:
+\begin{eqnarray}
+c(\theta) = \frac{1}{2} \theta^2. \nonumber
+\end{eqnarray}
+This means that $c'(\theta) = \theta$, $c''(\theta) = 1$ and $V^{-1}(\mu) = 1$. Then:
+\begin{eqnarray}
+g(\mu) = \int d\mu = \mu. \nonumber
+\end{eqnarray}
+For the \textbf{Bernouilli} and \textbf{binomial} distributions, recall (4):
+\begin{eqnarray}
+c(\theta) = -\log{(1-p)} = -\log{\left( 1 - \frac{e^\theta}{1+e^\theta} \right)} = -\log{\left( \frac{1}{1+e^\theta} \right)} = \log{(1 + e^\theta)} \nonumber
+\end{eqnarray}
+From this we obtain:
+\begin{eqnarray}
+c'(\theta) &=& \frac{e^\theta}{1 + e^\theta} \nonumber \\
+c''(\theta) &=& \frac{e^\theta}{(1 + e^\theta)^2}\nonumber \\
+V^{-1}(p) &=& \frac{1}{c''(\theta)} = \frac{(1 + e^\theta)^2}{e^\theta} = \frac{\left(1 + \frac{p}{1-p}\right)^2}{\frac{p}{1-p}} \nonumber
+\end{eqnarray}
+And finally recover:
+\begin{eqnarray}
+g(p) = \int \frac{(1 + \frac{p}{1-p})^2}{\frac{p}{1-p}} dp = \log p - \log{(1-p)} = \log{\left(\frac{p}{1-p}\right)}. \nonumber
+\end{eqnarray}
+In the case of the \textbf{Poisson} distribution, we have that $\theta = \log \lambda$ and $c(\theta) = \lambda = e^{\theta}$, thus:
+\begin{eqnarray}
+c'(\theta) &=& e^{\theta} \nonumber \\
+c''(\theta) &=& e^{\theta}  = \lambda \nonumber \\
+V^{-1}(\lambda) &=& \lambda^{-1} \nonumber
+\end{eqnarray}
+This implies:
+\begin{eqnarray}
+g(\lambda) = \int \lambda^{-1} d\lambda = \log \lambda. \nonumber
+\end{eqnarray}
+\newline \underline{Part (c)}\\
+\newline Answer. \\
+% EXERCISE 2
+\newpage
+\textbf{\underline{Exercise 2}}\\
+\newline \underline{Part (a)}\\
+\newline From the slides on MLE regression\footnote{Slide 8}, we know that:
+\begin{eqnarray}
+-2 \log p(\mathbf{t} | \mathbf{X}, \mathbf{w}, \mathbf{q}) = -N \log q + q (\mathbf{t} - \mathbf{\Phi w})^T (\mathbf{t} - \mathbf{\Phi w}) + c, \nonumber
+\end{eqnarray}
+where $c$ gathers all constant terms not dependent on $\mathbf{X}$. This yielded:
+\begin{eqnarray}
+q_{MLE} = \left( \frac{1}{N} \mathbf{e}^T \mathbf{e} \right)^{-1}. \nonumber
+\end{eqnarray}
+Then:
+\begin{eqnarray}
+-2 \log p(\mathbf{t} | \mathbf{X}, \mathbf{w}_{MLE}, \mathbf{q}_{MLE}) &=& -N \log \left( \frac{1}{N} \mathbf{e}^T \mathbf{e} \right)^{-1} + \left( \frac{1}{N} \mathbf{e}^T \mathbf{e} \right)^{-1} (\mathbf{t} - \mathbf{\Phi} \mathbf{w}_{MLE})^T (\mathbf{t} - \mathbf{\Phi} \mathbf{w}_{MLE}) + c \nonumber \\
+&=& N \log \mathbf{e}^T \mathbf{e} + N \left( \mathbf{e}^T \mathbf{e} \right)^{-1} \left( \mathbf{e}^T \mathbf{e} \right) + c \nonumber \\
+&=& N \log \mathbf{e}^T \mathbf{e} + c. \nonumber
+\end{eqnarray}
+Thus proved.\\
+\newline \underline{Part (b)}\\
+\newline The problem in Part (a) also yielded:
+\begin{eqnarray}
+\mathbf{w}_{MLE} = \left( \mathbf{\Phi}^T \mathbf{\Phi} \right)^{-1} \mathbf{\Phi}^T \mathbf{t}. \nonumber
+\end{eqnarray}
+In the null model, $\mathbf{\Phi}$ is a column vector with $N$ components all of which are equal to 1. Consequently $\mathbf{\Phi}^T$ is a row vector also of length $N$. Then:
+\begin{eqnarray}
+\mathbf{\Phi}^T \mathbf{\Phi} = \sum_{i=1}^{N} 1 \times 1 = N. \nonumber
+\end{eqnarray}
+This implies:
+\begin{eqnarray}
+\left( \mathbf{\Phi}^T \mathbf{\Phi} \right)^{-1} = \frac{1}{N}. \nonumber
+\end{eqnarray}
+Also:
+\begin{eqnarray}
+\mathbf{\Phi}^T \mathbf{t} = \sum_{i=1}^{N} 1 \times t_i = \sum_{i=1}^{N} t_i. \nonumber
+\end{eqnarray}
+Finally:
+\begin{eqnarray}
+w_{0, MLE} = \left( \mathbf{\Phi}^T \mathbf{\Phi} \right)^{-1} \mathbf{\Phi}^T \mathbf{t} = \frac{1}{N} \sum_{i=1}^{N} t_i = \bar{t}. \nonumber
+\end{eqnarray}
+Hence proved.\\
+\newline \underline{Part (c)}\\
+\newline Using the results in Exercise 2.1:
+\begin{eqnarray}
+D_0 &=& -2 \log p(\mathbf{t} | \mathbf{X}_{m_0} \mathbf{w}_{m_0, MLE}, q_{m_0, MLE})  \nonumber \\
+&=& N \log (\mathbf{t} - \bar{t})^T (\mathbf{t} - \bar{t}) + c \nonumber \\
+&=& N \log q^{-1} + c \nonumber \\
+&=& - N \log q + c \nonumber \\
+\nonumber \\
+D_1 &=& -2 \log p(\mathbf{t} | \mathbf{X}_{m_1} \mathbf{w}_{m_1, MLE}, q_{m_1, MLE})  \nonumber \\
+&=& N \log (\mathbf{e}^T \mathbf{e}) + c \nonumber
+\end{eqnarray}
+Also note that:
+\begin{eqnarray}
+R^2 = 1 - \frac{\text{var}(\mathbf{t} | \mathbf{x}) }{\text{var}(\mathbf{t})} = 1 - \frac{(\mathbf{t} - \hat{\mathbf{t}})^T (\mathbf{t} - \hat{\mathbf{t}})}{(\mathbf{t} - \bar{t})^T (\mathbf{t} - \bar{t})} = 1 - \frac{\mathbf{e}^T \mathbf{e}}{q^{-1}} = 1 - q \mathbf{e}^T \mathbf{e}  \nonumber
+\end{eqnarray}
+Now we calculate:
+\begin{eqnarray}
+D_0 - D_1 &=& (-N \log q + c) - (N \log \mathbf{e}^T \mathbf{e} + c) \nonumber \\
+&=& -N \log q - N \log \mathbf{e}^T \mathbf{e} \nonumber \\ 
+&=& -N  \log q \mathbf{e}^T \mathbf{e} \nonumber \\ 
+&=& -N  \log \left(1 - (1 - q \mathbf{e}^T \mathbf{e})\right) \nonumber \\ 
+&=& -N  \log \left(1 - R^2 \right). \nonumber
+\end{eqnarray}
+This finishes the proof.
+
+\end{document}
