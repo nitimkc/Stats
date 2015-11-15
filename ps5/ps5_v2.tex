@@ -51,23 +51,23 @@ Solution to proposed exercises.\\
 \end{eqnarray}
 Let's start by the \textbf{normal} distribution:
 \begin{eqnarray}
-\mathcal{N}(z | \mu, q) &=& \frac{q}{\sqrt{2 \pi}} \exp \left\{ -\frac{q}{2} (z - \mu)^2 \right\}  \nonumber \\
-&=& \frac{q}{\sqrt{2 \pi}} \exp \left\{ -\frac{1}{2} q (z^2 + \mu^2 - 2z\mu) \right\}  \nonumber \\
-&=& \frac{q}{\sqrt{2 \pi}} \exp \left\{ q \left[z \mu -\frac{1}{2} \left( z^2 + \mu^2 \right) \right] \right\}  \nonumber \\
-&=& \exp \left\{ q \left[ z \mu - \frac{1}{2} \mu^2 \right] + \log \left(  \frac{q}{\sqrt{2 \pi}} \right) - \frac{1}{2} q z^2  \right\}
+\mathcal{N}(z | \mu, q) &=& \frac{q^{1/2}}{\sqrt{2 \pi}} \exp \left\{ -\frac{q}{2} (z - \mu)^2 \right\}  \nonumber \\
+&=& \frac{q^{1/2}}{\sqrt{2 \pi}} \exp \left\{ -\frac{1}{2} q (z^2 + \mu^2 - 2z\mu) \right\}  \nonumber \\
+&=& \frac{q^{1/2}}{\sqrt{2 \pi}} \exp \left\{ q \left[z \mu -\frac{1}{2} \left( z^2 + \mu^2 \right) \right] \right\}  \nonumber \\
+&=& \exp \left\{ q \left[ z \mu - \frac{1}{2} \mu^2 \right] + \log \left(  \frac{q^{1/2}}{\sqrt{2 \pi}} \right) - \frac{1}{2} q z^2  \right\}
 \end{eqnarray}
 Now using (1) we can see the following in (2):
 \begin{eqnarray}
-\mathcal{N}(z | \mu, q) = \exp \left\{ \underbrace{q}_{= q} \left[ z \underbrace{\mu}_{=\theta} - \underbrace{\frac{1}{2} \mu^2}_{=c(\theta)} \right]   + \underbrace{\log \left( \frac{q}{\sqrt{2 \pi}} \right) - \frac{1}{2} q z^2}_{=h(z,q)}  \right\}
+\mathcal{N}(z | \mu, q) = \exp \left\{ \underbrace{q}_{= q} \left[ z \underbrace{\mu}_{=\theta} - \underbrace{\frac{1}{2} \mu^2}_{=c(\theta)} \right]   + \underbrace{\log \left( \frac{q^{1/2}}{\sqrt{2 \pi}} \right) - \frac{1}{2} q z^2}_{=h(z,q)}  \right\}
 \end{eqnarray}
-Thus with the normal distribution: $q = q$, $\theta = \mu$ and $c(\theta) = \frac{1}{2} \mu^2$.\\
+Thus with the normal distribution: $q = q$, $\theta = \mu$ and $c(\theta) = \frac{1}{2} \mu^2 =  \frac{1}{2} \theta^2$.\\
 \newline For the \textbf{Bernouilli} distribution:
 \begin{eqnarray}
 \text{Bern}(z | p) &=& p^z (1-p)^{1-z}  \nonumber \\
 &=& \exp \left\{ z \log{p} + (1-z) \log{(1-p)} \right\} \nonumber \\
 &=& \exp \left\{ z \log \left( \frac{p}{1-p} \right) + \log{(1-p)} \right\} \nonumber
 \end{eqnarray}
-Mimetizing the analysis in (3), we have that $q=1$, $\theta = \log \left( \frac{p}{1-p} \right)$ and that $c(\theta) = -\log{(1-p)}$. Also note that:
+Mimetizing the analysis in (3), we have that $q=1$, $\theta = \log \left( \frac{p}{1-p} \right)$ and that $c(\theta) = -\log{(1-p)} = \log(1 + e^\theta)$, because:
 \begin{eqnarray}
 \theta = \log \left( \frac{p}{1-p} \right) \Leftrightarrow p = \frac{e^\theta}{1 + e^\theta}.
 \end{eqnarray}
@@ -79,14 +79,14 @@ For the \textbf{binomial} distribution:
 &=& \exp \left\{ n \left[ \frac{z}{n} \log\left( \frac{p}{1-p} \right) + \log{(1-p)} \right] + \log{n \choose z} \right\} \nonumber
 %%&=& \exp \left\{ \right\} \nonumber \\
 \end{eqnarray}
-We adapted the objective variable to proportion of successes $z/n$, obtaining for the binomial: $q=n$, $\theta = \log \left( \frac{p}{1-p} \right)$ and $c(\theta) = -\log{(1-p)}$.\\
+We adapted the objective variable to proportion of successes $z/n$, obtaining for the binomial: $q=n$, $\theta = \log \left( \frac{p}{1-p} \right)$ and $c(\theta) = -\log{(1-p)} = \log(1 + e^\theta)$.\\
 \newline Finally, for the \textbf{Poisson} distribution:
 \begin{eqnarray}
 \text{Pois}(z | \lambda) &=& \frac{\lambda^z e^{-\lambda}}{z!} \nonumber \\
 &=& \exp \left\{ z \log \lambda - \lambda - \log z! \right\} \nonumber \\
 &=& \exp \left\{ [z \log \lambda - \lambda] - \log z! \right\} \nonumber
 \end{eqnarray}
-And using (1) that means that for Poisson $q = 1$, $\theta = \log \lambda$ and $c(\theta) =\lambda$.\\
+And using (1) that means that for Poisson $q = 1$, $\theta = \log \lambda$ and $c(\theta) =\lambda = e^\theta$.\\
 \newline \underline{Part (b)}\\
 \newline The procedure to obtain the canonical links is the following:
 \begin{itemize}
@@ -126,27 +126,26 @@ This implies:
 g(\lambda) = \int \lambda^{-1} d\lambda = \log \lambda. \nonumber
 \end{eqnarray}
 \newline \underline{Part (c)}\\
-\newline The likelihood function is the following:
+\newline From the log-likelihood function:
 \begin{eqnarray}
-\mathcal{L} \left( \text{NdEF}( t_n | \theta (\mathbf{x}_n, \mathbf{w}), q \gamma_n ) \right) &=& \prod_{n=1}^{N} \exp \left\{ \gamma_n q [ t_n \theta_n - c(\theta_n) ] + h(t_n, q \gamma_n) \right\} \nonumber \\
-&=& \exp \left\{ \sum_{n=1}^{N} \gamma_n q [ t_n \theta_n - c(\theta_n) ] + h(t_n, q \gamma_n) \right\}. \nonumber
+\log \mathcal{L} \left( \text{NdEF}( t_n | \theta (\mathbf{x}_n, \mathbf{w}), q \gamma_n ) \right) = \sum_{n=1}^{N} \gamma_n q [ t_n \theta( \phi(\mathbf{x}_n)^T \mathbf{w}) - c(\theta(\phi(\mathbf{x}_n)^T \mathbf{w})) ] + \sum_{n=1}^{N} h(t_n, q \gamma_n) \nonumber
 \end{eqnarray}
-\newline Then the log-likelihood:
+From the GLM lecture, slide 12:
 \begin{eqnarray}
-\log \mathcal{L} \left( \text{NdEF}( t_n | \theta (\mathbf{x}_n, \mathbf{w}), q \gamma_n ) \right) = \sum_{n=1}^{N} \gamma_n q [ t_n \theta_n - c(\theta_n) ] + h(t_n, q \gamma_n). \nonumber
+\frac{\partial \log \mathcal{L}}{\partial \mathbf{w}} &=& \sum_{n=1}^{N} \frac{\gamma_n}{V(y(\mathbf{x}_n, \mathbf{w}))} \frac{1}{g'(y(\mathbf{x}_n, \mathbf{w}))} q(t_n - y(\mathbf{x}_n, \mathbf{w})) \phi(\mathbf{x}_n)  \nonumber \\
+&=& \sum_{n=1}^{N} \gamma_n q(t_n - y(\mathbf{x}_n, \mathbf{w})) \phi(\mathbf{x}_n) \nonumber \\
+&=& q \sum_{n=1}^{N} \gamma_n t_n \phi(\mathbf{x}_n) - q \sum_{n=1}^{N} \gamma_n y(\mathbf{x}_n, \mathbf{w}) \phi(\mathbf{x}_n)   \nonumber
 \end{eqnarray}
-Under the canonical link: $\theta(\mathbf{x}_n, \mathbf{w}) = \phi(\mathbf{x}_n)^T \mathbf{w}$, therefore:
+We can make the simplification because under the canonical form: $g'(y) = 1/V(y)$. Also under canonical form $\mathbb{E}[t_n] = \theta = g(y(\mathbf{x}_n, \mathbf{w})) = y(\mathbf{x}_n, \mathbf{w}) = \phi(\mathbf{x}_n)^T \mathbf{w}$. Then:
 \begin{eqnarray}
-\log \mathcal{L} \left( \text{NdEF}( t_n | \theta (\mathbf{x}_n, \mathbf{w}), q \gamma_n ) \right) &=& \sum_{n=1}^{N} \gamma_n q [ t_n \phi(\mathbf{x}_n)^T \mathbf{w} - c(\phi(\mathbf{x}_n)^T \mathbf{w}) ] + h(t_n, q \gamma_n) \nonumber \\
-&=& \sum_{n=1}^{N} \gamma_n q t_n \phi(\mathbf{x}_n)^T \mathbf{w} + h(t_n, q \gamma_n) - \sum_{n=1}^{N} \gamma_n q c(\phi(\mathbf{x}_n)^T \mathbf{w}) \nonumber
+\frac{\partial \log \mathcal{L}}{\partial \mathbf{w}} &=& q \sum_{n=1}^{N} \gamma_n t_n \phi(\mathbf{x}_n) - q \sum_{n=1}^{N} \gamma_n \phi(\mathbf{x}_n)^T \mathbf{w} \phi(\mathbf{x}_n)  \nonumber \\
+\frac{\partial^2 \log \mathcal{L}}{\partial \mathbf{w}^2} &=& -q \sum_{n=1}^{N} \gamma_n \phi(\mathbf{x}_n)^T \phi(\mathbf{x}_n)
 \end{eqnarray}
-The left part of this result, the positive sum, is linear. If the right-handed sum is convex, then the negative of this sum is concave. We use the second derivative:
+In matrix form write (5) as:
 \begin{eqnarray}
-\frac{\partial c(\theta)}{\partial \theta_n} &=& \mathbb{E}[t_n] \nonumber \\
-\frac{\partial^2 c(\theta)}{\partial \theta_{n}^{2}} &=& \mathbb{E}[t_n^2] - \mathbb{E}[t_n]^2 = \mathbb{V}[t_n] \nonumber \\
-\frac{\partial^2 c(\theta)}{\partial \theta_n \partial \theta_m} &=&\mathbb{E}[t_n t_m] - \mathbb{E}[t_n] \mathbb{E}[t_m] = \text{cov}[t_n, t_m] \nonumber
+-q \mathbf{\Phi}^T \mathbf{\Gamma} \mathbf{\Phi}, \nonumber
 \end{eqnarray}
-This final derivative evaluated for all pairs $n, m \in [1, N]$ produces the Hessian covariance matrix. The covariance matrix is positive semi-definite, and thus log-convex. Its negative is log-concave. Therefore, the log-likelihood function is log-concave.\\
+where $\mathbf{\Gamma} = \text{diag}(\gamma_n)$. We know that $\mathbf{\Phi}^T \mathbf{\Phi}$ is the covariance matrix, which is positive semi-definite, thus log-convex. All elements of $\mathbf{\Gamma}$ are positive and $q$ is as well, so this multiplication remains log-convex. Then the negative sign makes the log-likelihood  log-concave.\\
 % EXERCISE 2
 \newpage
 \textbf{\underline{Exercise 2}}\\
