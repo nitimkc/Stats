@@ -127,24 +127,22 @@ g(\lambda) = \int \lambda^{-1} d\lambda = \log \lambda. \nonumber
 \newline \underline{Part (c)}\\
 \newline From the log-likelihood function:
 \begin{eqnarray}
-\log \mathcal{L} \left( \text{NdEF}( t_n | \theta (\mathbf{x}_n, \mathbf{w}), q \gamma_n ) \right) = \sum_{n=1}^{N} \gamma_n q [ t_n \theta( \phi(\mathbf{x}_n)^T \mathbf{w}) - c(\theta(\phi(\mathbf{x}_n)^T \mathbf{w})) ] + \sum_{n=1}^{N} h(t_n, q \gamma_n) \nonumber
+\log \mathcal{L} \left( \text{NdEF}( t_n | \theta (\mathbf{x}_n, \mathbf{w}), q \gamma_n ) \right) = \sum_{n=1}^{N} \gamma_n q [ t_n \theta( \mathbf{x}_n, \mathbf{w}) - c(\theta(\phi(\mathbf{x}_n)^T \mathbf{w})) ] + \sum_{n=1}^{N} h(t_n, q \gamma_n) \nonumber
 \end{eqnarray}
-From the GLM lecture, slide 12:
+Under the canonical link:
 \begin{eqnarray}
-\frac{\partial \log \mathcal{L}}{\partial \mathbf{w}} &=& \sum_{n=1}^{N} \frac{\gamma_n}{V(y(\mathbf{x}_n, \mathbf{w}))} \frac{1}{g'(y(\mathbf{x}_n, \mathbf{w}))} q(t_n - y(\mathbf{x}_n, \mathbf{w})) \phi(\mathbf{x}_n)  \nonumber \\
-&=& \sum_{n=1}^{N} \gamma_n q(t_n - y(\mathbf{x}_n, \mathbf{w})) \phi(\mathbf{x}_n) \nonumber \\
-&=& q \sum_{n=1}^{N} \gamma_n t_n \phi(\mathbf{x}_n) - q \sum_{n=1}^{N} \gamma_n y(\mathbf{x}_n, \mathbf{w}) \phi(\mathbf{x}_n)   \nonumber
+\theta(\mathbf{x}_n, \mathbf{w}) = \phi(\mathbf{x}_n)^T \mathbf{w} \nonumber
 \end{eqnarray}
-We can make the simplification because under the canonical form: $g'(y) = 1/V(y)$. Also under canonical form $\mathbb{E}[t_n] = \theta = g(y(\mathbf{x}_n, \mathbf{w})) = y(\mathbf{x}_n, \mathbf{w}) = \phi(\mathbf{x}_n)^T \mathbf{w}$. Then:
+This implies:
 \begin{eqnarray}
-\frac{\partial \log \mathcal{L}}{\partial \mathbf{w}} &=& q \sum_{n=1}^{N} \gamma_n t_n \phi(\mathbf{x}_n) - q \sum_{n=1}^{N} \gamma_n \phi(\mathbf{x}_n)^T \mathbf{w} \phi(\mathbf{x}_n)  \nonumber \\
-\frac{\partial^2 \log \mathcal{L}}{\partial \mathbf{w}^2} &=& -q \sum_{n=1}^{N} \gamma_n \phi(\mathbf{x}_n)^T \phi(\mathbf{x}_n)
+\log \mathcal{L} = \sum_{n=1}^{N} \gamma_n q [ t_n \phi(\mathbf{x}_n)^T \mathbf{w} - c(\phi(\mathbf{x}_n)^T \mathbf{w}) ] + \sum_{n=1}^{N} h(t_n, q \gamma_n) \nonumber
 \end{eqnarray}
-In matrix form write (5) as:
+We can differentiate with respect to $\mathbf{w}$ to find out about log-concavity:
 \begin{eqnarray}
--q \mathbf{\Phi}^T \mathbf{\Gamma} \mathbf{\Phi}, \nonumber
+\nabla_{\mathbf{w}} \log \mathcal{L} &=&  \sum_{n=1}^{N} \gamma_n q [ t_n \phi(\mathbf{x}_n) - \nabla c(\phi(\mathbf{x}_n)^T \mathbf{w}) ] \nonumber \\
+\nabla \nabla_{\mathbf{w}} \log \mathcal{L} &=& - \sum_{n=1}^{N} \gamma_n q \nabla \nabla c(\phi(\mathbf{x}_n)^T \mathbf{w}) \nonumber
 \end{eqnarray}
-where $\mathbf{\Gamma} = \text{diag}(\gamma_n)$. We know that $\mathbf{\Phi}^T \mathbf{\Phi}$ would be positive semi-definite (proved in Exercise 1 of Problem Set 1), thus log-convex. All elements of $\mathbf{\Gamma}$ are non-negative and $q$ is as well, so this multiplication remains log-convex. Then the negative sign makes the log-likelihood log-concave.\\
+Observe that the matrix of second derivatives $\nabla \nabla c(\phi(\mathbf{x}_n)^T \mathbf{w})$ is positive-semi-definite, thereby log-convex, as $c''(\theta)$ is the variance function. Also, $q$ and $\eta_n$ are non-negative by construction, and so the multiplication remains log-convex. The minus sign in front makes it negative and  thus log-concave.\\
 % EXERCISE 2
 \newpage
 \textbf{\underline{Exercise 2}}\\
@@ -190,23 +188,21 @@ Hence proved.\\
 \newline Using the results in Exercise 2.1:
 \begin{eqnarray}
 D_0 &=& -2 \log p(\mathbf{t} | \mathbf{X}_{m_0} \mathbf{w}_{m_0, MLE}, q_{m_0, MLE})  \nonumber \\
-&=& N \log (\mathbf{t} - \bar{t})^T (\mathbf{t} - \bar{t}) + c \nonumber \\
-&=& N \log q^{-1} + c \nonumber \\
-&=& - N \log q + c \nonumber \\
+&=& N \log (\mathbf{e}_{0}^{T} \mathbf{e}_{0}) + c \nonumber \\
 \nonumber \\
 D_1 &=& -2 \log p(\mathbf{t} | \mathbf{X}_{m_1} \mathbf{w}_{m_1, MLE}, q_{m_1, MLE})  \nonumber \\
-&=& N \log (\mathbf{e}^T \mathbf{e}) + c \nonumber
+&=& N \log (\mathbf{e}_{1}^{T} \mathbf{e}_{1}) + c \nonumber
 \end{eqnarray}
-Also note that:
+Also note that given that $D_0$ is for the intercept model it has $\hat{t} = \bar{t}$ and we can write:
 \begin{eqnarray}
-R^2 = 1 - \frac{\text{var}(\mathbf{t} | \mathbf{x}) }{\text{var}(\mathbf{t})} = 1 - \frac{(\mathbf{t} - \hat{\mathbf{t}})^T (\mathbf{t} - \hat{\mathbf{t}})}{(\mathbf{t} - \bar{t})^T (\mathbf{t} - \bar{t})} = 1 - \frac{\mathbf{e}^T \mathbf{e}}{q^{-1}} = 1 - q \mathbf{e}^T \mathbf{e}  \nonumber
+R^2 = 1 - \frac{\text{var}(\mathbf{t} | \mathbf{x}) }{\text{var}(\mathbf{t})} = 1 - \frac{\frac{1}{N} \sum_{n=1}^{N} (t_n - \hat{t})^2 }{\frac{1}{N} \sum_{n=1}^{N} (t_n - \bar{t})^2} = 1 - \frac{\sum_{n=1}^{N} (t_n - \hat{t})^2 }{\sum_{n=1}^{N} (t_n - \bar{t})^2} = 1 - \frac{(\mathbf{t} - \hat{\mathbf{t}})^T (\mathbf{t} - \hat{\mathbf{t}})}{(\mathbf{t} - \bar{\mathbf{t}})^T (\mathbf{t} - \bar{\mathbf{t}})} = 1 - \frac{\mathbf{e}_{1}^{T} \mathbf{e}_{1}}{\mathbf{e}_{0}^{T} \mathbf{e}_{0}}  \nonumber
 \end{eqnarray}
 Now we calculate:
 \begin{eqnarray}
-D_0 - D_1 &=& (-N \log q + c) - (N \log \mathbf{e}^T \mathbf{e} + c) \nonumber \\
-&=& -N \log q - N \log \mathbf{e}^T \mathbf{e} \nonumber \\ 
-&=& -N  \log q \mathbf{e}^T \mathbf{e} \nonumber \\ 
-&=& -N  \log \left(1 - (1 - q \mathbf{e}^T \mathbf{e})\right) \nonumber \\ 
+D_0 - D_1 &=& (N \log \mathbf{e}_{0}^{T} \mathbf{e}_{0} + c) - (N \log \mathbf{e}_{1}^{T} \mathbf{e}_{1} + c) \nonumber \\
+&=& - N \log (\mathbf{e}_{0}^{T} \mathbf{e}_{0})^{-1} - N \log \mathbf{e}_{1}^{T} \mathbf{e}_{1} \nonumber \\
+&=& - N \log \left[ \mathbf{e}_{1}^{T} \mathbf{e}_{1} (\mathbf{e}_{0}^{T} \mathbf{e}_{0})^{-1} \right] \nonumber \\
+&=& - N \log \left[ 1 - \left(1 - \frac{\mathbf{e}_{1}^{T} \mathbf{e}_{1}}{ \mathbf{e}_{0}^{T} \mathbf{e}_{0}} \right) \right] \nonumber \\
 &=& -N  \log \left(1 - R^2 \right). \nonumber
 \end{eqnarray}
 This finishes the proof.
