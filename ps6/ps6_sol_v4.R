@@ -1,4 +1,3 @@
-
 # Libraries
 library(ggplot2)
 library(gridExtra)
@@ -29,12 +28,15 @@ Phi <- cbind(1, data)
 iters <- 100
 t <- Phi[, 2]
 Phi <- as.matrix(Phi[, -2])
+N <- nrow(Phi)
+M <- ncol(Phi)
 
 ################################################################################
 # EXERCISE 3.1
 ################################################################################
 # Run EM algorithm for Robust model
 res <- em.algorithm(Phi, t, v, iters = 100)
+w <- res[['w']]
 q <- res[['q']]
 etas <- res[['etas']]
 errors <- res[['errors']]
@@ -42,7 +44,7 @@ errors <- res[['errors']]
 # Standard errors for w
 el1 <- q * sum(((v + 1) * (v - 2 - q * errors ** 2)) /
                 (v + q * errors ** 2 - 2) ** 2) * t(Phi) %*% Phi
-el2 <- q * t(err^3 * ((v + 1) / (v + q * errors ** 2 - 2) ** 2)) %*% Phi
+el2 <- q * t(errors ** 3 * ((v + 1) / (v + q * errors ** 2 - 2) ** 2)) %*% Phi
 el3 <- t(el2)
 el4 <- (1 / 2) * sum((1 / (q ** 2)) - ((v + 1) * errors ** 4) /
                                        (v + q * errors ** 2 - 2) ** 2)
@@ -90,29 +92,29 @@ dev.off()
 # EXERCISE 3.2
 #########################################################################################
 # Deviance residuals
-devG <- - N * log(qG) + qG * errorsG ** 2 + 2 * log(2 * pi)
-devR <- - N * log(q) + q * errors ** 2 + 2 * log(2 * pi) - N * log(diag(Eta)) + diag(Eta)
 
-par(mfrow = c(1, 2))
-plot(devR / sum(devR), pch = 16, col = 'darkgreen', ylim = c(0.0032, 0.0045))
-abline(h = quantile(devR / sum(devR), 0.99), col = 'red')
-plot(devG / sum(devG), pch = 16, col = 'blue', ylim = c(0.0032, 0.0045))
-abline(h = quantile(devG / sum(devG), 0.99), col = 'red')
+#devG <- - N * log(qG) + qG * errorsG ** 2 + 2 * log(2 * pi)
+#devR <- - N * log(q) + q * errors ** 2 + 2 * log(2 * pi) - N * log(diag(Eta)) + diag(Eta)
+#
+#par(mfrow = c(1, 2))
+#plot(devR / sum(devR), pch = 16, col = 'darkgreen', ylim = c(0.0032, 0.0045))
+#abline(h = quantile(devR / sum(devR), 0.99), col = 'red')
+#plot(devG / sum(devG), pch = 16, col = 'blue', ylim = c(0.0032, 0.0045))
+#abline(h = quantile(devG / sum(devG), 0.99), col = 'red')
+#
+##devG <- - N * log(qG) + qG * errorsG ** 2
+##devR <- - N * log(q) + q * errors ** 2 - N * log(diag(Eta)) + diag(Eta)
+#
+#pred <- Phi %*% w
+#sign(err) * (2 * pred * log(t / pred) + 2 * (N - t) * log((N - t) / (N - pred))) ** (1/2)
+#
+#
+#dev.gauss <- q.mle * (errg ** 2)
+#devR <- q[1, 1] * (err ** 2)# %*% diag(Eta)
 
-#devG <- - N * log(qG) + qG * errorsG ** 2
-#devR <- - N * log(q) + q * errors ** 2 - N * log(diag(Eta)) + diag(Eta)
-
-pred <- Phi %*% w
-sign(err) * (2 * pred * log(t / pred) + 2 * (N - t) * log((N - t) / (N - pred))) ** (1/2)
-
-
-dev.gauss <- q.mle * (errg ** 2)
-devR <- q[1, 1] * (err ** 2)# %*% diag(Eta)
-
-
+# Deviance residuals
 devG <- errorsG ** 2
 devR <- (errors ** 2) * etas
-
 
 
 png('ps6_plot2.png', width = 2 * 400, height = 400)
@@ -212,13 +214,4 @@ grid()
 #axis(side = 1, at = seq_along(opt.nu[, 1]),
 #     labels = opt.nu[, 1], las = 1, cex.axis = 0.7)
 dev.off()
-
-
-
-
-
-
-
-
-
 
