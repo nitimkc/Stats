@@ -142,7 +142,7 @@ We can differentiate with respect to $\mathbf{w}$ to find out about log-concavit
 \nabla_{\mathbf{w}} \log \mathcal{L} &=&  \sum_{n=1}^{N} \gamma_n q [ t_n \phi(\mathbf{x}_n) - \nabla c(\phi(\mathbf{x}_n)^T \mathbf{w}) ] \nonumber \\
 \nabla \nabla_{\mathbf{w}} \log \mathcal{L} &=& - \sum_{n=1}^{N} \gamma_n q \nabla \nabla c(\phi(\mathbf{x}_n)^T \mathbf{w}) \nonumber
 \end{eqnarray}
-Observe that the matrix of second derivatives $\nabla \nabla c(\phi(\mathbf{x}_n)^T \mathbf{w})$ is positive-semi-definite, thereby log-convex, as $c''(\theta)$ is the variance function. Also, $q$ and $\eta_n$ are non-negative by construction, and so the multiplication remains log-convex. The minus sign in front makes it negative and  thus log-concave.\\
+Observe that the matrix of second derivatives $\nabla \nabla c(\phi(\mathbf{x}_n)^T \mathbf{w})$ is positive-semi-definite, thereby log-convex, as $c''(\theta)$ is the variance function. Also, $q$ and $\eta_n$ are non-negative by construction, and so the multiplication remains log-convex. The minus sign in front makes it negative and  thus the log-likelihood is log-concave.\\
 % EXERCISE 2
 \newpage
 \textbf{\underline{Exercise 2}}\\
