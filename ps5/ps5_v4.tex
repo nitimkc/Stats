@@ -88,16 +88,15 @@ Then for the binomial: $z = t/n$, $q=n$, $\theta = \log \left( \frac{p}{1-p} \ri
 \end{eqnarray}
 And using (1) that means that for Poisson $z=t$, $q = 1$, $\theta = \log \lambda$ and $c(\theta) =\lambda = e^\theta$.\\
 \newline \underline{Part (b)}\\
-\newline To obtain the canonical links we do the following:
-\begin{itemize}
-\item Compute the variance function: $V(\mathbb{E}[z]) = c''(\theta)$.
-\item Obtain the canonical link function $g(\mathbb{E}[z]) = \int V^{-1}(\mathbb{E}[z]) d\mathbb{E}[z]$.
-\end{itemize}
+\newline To obtain the canonical links we apply the following formula\footnote{GLMs lecture, slide number 11.}:
+\begin{eqnarray}
+g(\mathbb{E}[z]) = \int \frac{1}{c''(\theta)} d\mathbb{E}[z]. \nonumber
+\end{eqnarray}
 For the \textbf{normal} distribution, where $\theta = \mu$:
 \begin{eqnarray}
 c(\theta) = \frac{1}{2} \theta^2. \nonumber
 \end{eqnarray}
-This means that $c'(\theta) = \theta$, $c''(\theta) = 1$ and $V^{-1}(\mu) = 1$. Then:
+This means that $c'(\theta) = \theta$, $c''(\theta) = 1$ and $1/c''(\theta) = 1$. Then:
 \begin{eqnarray}
 g(\mu) = \int d\mu = \mu. \nonumber
 \end{eqnarray}
@@ -109,7 +108,7 @@ From this we obtain:
 \begin{eqnarray}
 c'(\theta) &=& \frac{e^\theta}{1 + e^\theta} \nonumber \\
 c''(\theta) &=& \frac{e^\theta}{(1 + e^\theta)^2}\nonumber \\
-V^{-1}(p) &=& \frac{1}{c''(\theta)} = \frac{(1 + e^\theta)^2}{e^\theta} = \frac{\left(1 + \frac{p}{1-p}\right)^2}{\frac{p}{1-p}} \nonumber
+\frac{1}{c''(\theta)} &=& \frac{(1 + e^\theta)^2}{e^\theta} = \frac{\left(1 + \frac{p}{1-p}\right)^2}{\frac{p}{1-p}} \nonumber
 \end{eqnarray}
 And finally recover:
 \begin{eqnarray}
@@ -119,7 +118,7 @@ In the case of the \textbf{Poisson} distribution, we have that $\theta = \log \l
 \begin{eqnarray}
 c'(\theta) &=& e^{\theta} \nonumber \\
 c''(\theta) &=& e^{\theta}  = \lambda \nonumber \\
-V^{-1}(\lambda) &=& \lambda^{-1} \nonumber
+\frac{1}{c''(\theta)} &=& \lambda^{-1} \nonumber
 \end{eqnarray}
 This implies:
 \begin{eqnarray}
@@ -152,7 +151,7 @@ where $\mathbf{\Gamma} = \text{diag}(\gamma_n)$. We know that $\mathbf{\Phi}^T \
 \newline \underline{Part (a)}\\
 \newline From the slides on MLE regression\footnote{Slide 8}, we know that:
 \begin{eqnarray}
--2 \log p(\mathbf{t} | \mathbf{X}, \mathbf{w}, \mathbf{q}) = -N \log q + q (\mathbf{t} - \mathbf{\Phi w})^T (\mathbf{t} - \mathbf{\Phi w}) + c, \nonumber
+-2 \log p(\mathbf{t} | \mathbf{X}, \mathbf{w}, q) = -N \log q + q (\mathbf{t} - \mathbf{\Phi w})^T (\mathbf{t} - \mathbf{\Phi w}) + c, \nonumber
 \end{eqnarray}
 where $c$ gathers all constant terms not dependent on $\mathbf{X}$. This yielded:
 \begin{eqnarray}
@@ -160,7 +159,7 @@ q_{MLE} = \left( \frac{1}{N} \mathbf{e}^T \mathbf{e} \right)^{-1}. \nonumber
 \end{eqnarray}
 Then:
 \begin{eqnarray}
--2 \log p(\mathbf{t} | \mathbf{X}, \mathbf{w}_{MLE}, \mathbf{q}_{MLE}) &=& -N \log \left( \frac{1}{N} \mathbf{e}^T \mathbf{e} \right)^{-1} + \left( \frac{1}{N} \mathbf{e}^T \mathbf{e} \right)^{-1} (\mathbf{t} - \mathbf{\Phi} \mathbf{w}_{MLE})^T (\mathbf{t} - \mathbf{\Phi} \mathbf{w}_{MLE}) + c \nonumber \\
+-2 \log p(\mathbf{t} | \mathbf{X}, \mathbf{w}_{MLE}, q_{MLE}) &=& -N \log \left( \frac{1}{N} \mathbf{e}^T \mathbf{e} \right)^{-1} + \left( \frac{1}{N} \mathbf{e}^T \mathbf{e} \right)^{-1} (\mathbf{t} - \mathbf{\Phi} \mathbf{w}_{MLE})^T (\mathbf{t} - \mathbf{\Phi} \mathbf{w}_{MLE}) + c \nonumber \\
 &=& N \log \mathbf{e}^T \mathbf{e} + N \left( \mathbf{e}^T \mathbf{e} \right)^{-1} \left( \mathbf{e}^T \mathbf{e} \right) + c \nonumber \\
 &=& N \log \mathbf{e}^T \mathbf{e} + c. \nonumber
 \end{eqnarray}
