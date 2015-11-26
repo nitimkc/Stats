@@ -125,12 +125,29 @@ Hence proved.
 \newpage
 \textbf{\underline{Exercise 3}}\\
 \newline \underline{Part (a)}\\
-\newline Answer.\\
-\newline \underline{Part (b)}\\
-\newline Answer.\\
-\newline \underline{Part (c)}\\
-\newline Answer.\\
-\newline \underline{Part (d)}\\
-\newline Answer.
+\begin{center}
+\includegraphics[scale=0.5]{ps6_plot1_1.png}\\
+\includegraphics[scale=0.5]{ps6_plot1_2.png}
+\end{center}
+\underline{Part (b)}\\
+\begin{center}
+\includegraphics[scale=0.6]{ps6_plot2.png}
+\end{center}
+\underline{Part (c)}\\
+\newline We can decide to stop the EM algorithm when the values for the estimated parameters $\theta$ estabilize, which is very similar to saying when the log-likelihood stops increasing (the sequential iterations increase its value by a very small number, say $10^{-6}$).\\
+\newline Example (parameter stabilization: $q$ and $\mathbf{w}$, here only $w_1$ for illustration):
+\begin{center}
+\includegraphics[scale=0.4]{ps6_plot3.png}
+\end{center}
+Example (log-likelihood stabilization):
+\begin{center}
+\includegraphics[scale=0.6]{ps6_plot4.png}
+\end{center}
+\underline{Part (d)}\\
+\newline We can choose $\nu$ by running the EM algorithm for different values of $\nu$ and then choosing the smallest $\nu$ that maximizes the log-likelihood, i.e. the one for which increasing $\nu$ raises log-likelihood by a very small amount, again say by $10^{-6}$.\\
+\newline Graphical representation:
+\begin{center}
+\includegraphics[scale=0.7]{ps6_plot5.png}
+\end{center}
 
 \end{document}

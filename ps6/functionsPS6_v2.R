@@ -18,12 +18,12 @@ em.algorithm <- function(Phi, t, v, iters = 100) {
   for (iter in 1:iters) {
     # Update Eta matrix
     cat('\rIteration:', iter)    
-    errors <- t - Phi %*% w
+    errors <- t - Phi %*% w  # Error terms
     etas <- (v + 1) / (v + q * (errors ** 2) - 2)
     Eta <- diag(as.numeric(etas))
 
     # Recompute w and q
-    errors <- t - Phi %*% w  # Error terms
+    #errors <- t - Phi %*% w  # Error terms
     w <- solve(t(Phi) %*% Eta %*% Phi) %*% t(Phi) %*% Eta %*% t
     q <- ((1 / N) * t(errors) %*% Eta %*% errors) ** (-1)
     q <- as.numeric(q)
@@ -70,6 +70,18 @@ robust.log.lik <- function(N, q, errors, Eta, etas) {
          #log(prod(etas ** (1 / 2)))
          log(prod(etas[etas >= 0] ** (1 / 2)))
   return(val)
+  # Page 121 Bishop
+  #(N * log(gamma(v / 2 + 1 / 2) / gamma(v / 2)) + N * (1 / 2) * log(lambda / (pi * v)) + (- (v / 2) - (1 / 2)) * log(1 + (lambda * t(t - mu) %*% (t - mu)) / v))
+}
+
+################################################################################
+robust.log.lik <- function(N, t, v, lambda, mu) {
+################################################################################
+  val <- (N * log(gamma(v / 2 + 1 / 2) / gamma(v / 2)) +
+          N * (1 / 2) * log(lambda / (pi * v)) +
+          (- (v / 2) - (1 / 2)) *
+          log(1 + (lambda * t(t - mu) %*% (t - mu)) / v))
+  return(as.numeric(val))
 }
 
 ################################################################################
@@ -117,7 +129,9 @@ em.stabilized <- function(Phi, t, v, iters = 100, method) {
         return(list(ws = ws, qs = qs, n.iter = iter))
       }
     } else if (method == 'likelihood') {
-      log.lik <- robust.log.lik(N, q, errors, Eta, etas)
+      mu <- Phi %*% w
+      lambda <- q * (v / (v - 2))
+      log.lik <- robust.log.lik(N, t, v, lambda, mu)
       logliks <- c(logliks, log.lik)
       if (iter > 1 && abs(logliks[length(logliks) - 1] - log.lik) < 1e-6) {
         cat('\n')

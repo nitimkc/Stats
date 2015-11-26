@@ -1,3 +1,4 @@
+#source('/Users/miquel/Desktop/bgse/courses/term1/smi/ps/ps6/ps6_sol_v5.R')
 # Libraries
 library(ggplot2)
 library(gridExtra)
@@ -7,7 +8,7 @@ library(OpenMx)
 setwd('/Users/miquel/Desktop/bgse/courses/term1/smi/ps/ps6')
 
 # Source functions
-source('functionsPS6.R')
+source('functionsPS6_v2.R')
 
 # Load the data
 aux <- load(file = '../../datasets/synthetic_regression.RData')
@@ -19,17 +20,16 @@ if (! 'data' %in% aux) { rm(list = aux); gc() }
 # Choose the data
 data <- data[1:300, 1:31]
 
-# Save data
-save(data, file = '/Users/miquel/Desktop/data.RData')
+## Save data
+#save(data, file = '/Users/miquel/Desktop/data.RData')
 
 # Parameters
 v <- 10
-Phi <- cbind(1, data)
-iters <- 100
-t <- Phi[, 2]
-Phi <- as.matrix(Phi[, -2])
+t <- data[, 1]
+Phi <- as.matrix(cbind(1, data[, -1]))
 N <- nrow(Phi)
 M <- ncol(Phi)
+iters <- 100
 
 ################################################################################
 # EXERCISE 3.1
@@ -42,21 +42,28 @@ etas <- res[['etas']]
 errors <- res[['errors']]
 
 # Standard errors for w
-el1 <- q * sum(((v + 1) * (v - 2 - q * errors ** 2)) /
-                (v + q * errors ** 2 - 2) ** 2) * t(Phi) %*% Phi
-el2 <- q * t(errors ** 3 * ((v + 1) / (v + q * errors ** 2 - 2) ** 2)) %*% Phi
-el3 <- t(el2)
-el4 <- (1 / 2) * sum((1 / (q ** 2)) - ((v + 1) * errors ** 4) /
-                                       (v + q * errors ** 2 - 2) ** 2)
+A <- matrix(0, M, M)
+B <- matrix(0, M, 1)
+C <- matrix(0, 1, M)
+D <- 0
+for (i in 1:N) {
+  A <- A + q * (((v + 1) * (v - 2 - q * errors[i] ** 2)) /
+               (v + q * errors[i] ** 2 - 2) ** 2) * Phi[i, ] %*% t(Phi[i, ])
+  B <- B + q * t(errors[i] ** 3 * ((v + 1) / (v + q * errors[i] ** 2 - 2) ** 2) %*% Phi[i, ])
+  C <- C + t(B)
+  D <- D + (1 / 2) * sum(1 / (q ** 2) - ((v + 1) * errors[i] ** 4) / (v + q * errors[i] ** 2 - 2) ** 2) 
+}
 
 # Build the matrix and obtain the standard errors
-Q <- rbind(cbind(el1, t(el2)), c(t(el3), el4))
+Q <- rbind(cbind(A, B), c(C, D))
 #ses <- sqrt(diag(solve(Q)))[1:31]
 ses <- sqrt(diag(solve(Q)))[1:M]
 
 # Plot
 aux <- data.frame('X_feature' = paste('X', sprintf('%02.0f', 0:30), sep = ''),
                   'Estimated_Coefficient'= w,
+                  #upper = w + 1.96 * 10 * ses,
+                  #lower = w - 1.96 * 10 * ses)
                   upper = w + 1.96 * ses,
                   lower = w - 1.96 * ses)
 plot1 <- ggplot(aux, aes(x = X_feature, y = Estimated_Coefficient)) +
@@ -84,8 +91,13 @@ plot2 <- ggplot(aux, aes(x = X_feature, y = Estimated_Coefficient)) +
   geom_point(size = 4) +
   geom_errorbar(aes(ymax = upper, ymin = lower))
 
-png('ps6_plot1.png', width = 2 * 600, height = 400)
-grid.arrange(plot1, plot2, ncol = 2)
+#png('ps6_plot1.png', width = 2 * 600, height = 400)
+#grid.arrange(plot1, plot2, ncol = 2)
+png('ps6_plot1_1.png', width = 600, height = 400)
+plot1
+dev.off()
+png('ps6_plot1_2.png', width = 600, height = 400)
+plot2
 dev.off()
 
 #########################################################################################
@@ -112,25 +124,49 @@ dev.off()
 #dev.gauss <- q.mle * (errg ** 2)
 #devR <- q[1, 1] * (err ** 2)# %*% diag(Eta)
 
+mu <- Phi %*% w
+dr <- rep(NA, length(t))
+dg <- rep(NA, length(t))
+lambda <- q * (v / (v - 2))
+for (n in 1:length(t)) {
+  dr[n] <- (-2) * ((log(gamma(v / 2 + 1 / 2) / gamma(v / 2)) +
+                   (1 / 2) * log(lambda / (pi * v)) +
+                   (- v / 2 - 1 / 2) *
+                   log(1 + (lambda * t(t[n]- mu[n]) %*% (t[n] - mu[n])) / v)))
+  #dg[n] <- (-2) * ()
+}
+
+#(-2) * ((log(gamma(v / 2 + 1 / 2) / gamma(v / 2)) + (1 / 2) * log(lambda / (pi * v)) + (- v / 2 - 1 / 2) * log(1 + (lambda * t(t[n]- mu[n]) %*% (t[n] - mu[n])) / v)))
+#(N*log(gamma(v/2+1/2)/gamma(v/2)) + N*(1/2)*log(lambda/(pi*v)) + (-v/2 -1/2)*log(1 + (lambda *t(t- mu)%*%(t-mu))/v))
+#rt(mu, lambda, v)
+
 # Deviance residuals
-devG <- errorsG ** 2
-devR <- (errors ** 2) * etas
+devG <- (-1) * log(qG) + qG * errorsG ** 2 + log(2 * pi)
+#devG <- (-1) * log(qG) + qG * errorsG ** 2 + 2 * log(2 * pi)
+#devG <- errorsG ** 2
+devR <- dr
+#devR <- t(t - mu) %*% (t - mu)
+#devR <- (errors ** 2) * etas
+#devR <- rep(NA, length(t))
+#for (n in 1:length(t)) {
+#  devR[n] <- t(t[n]- mu[n]) %*% (t[n] - mu[n])
+#}
 
-
+# Plot
 png('ps6_plot2.png', width = 2 * 400, height = 400)
 #png('ps6_plot2.png', width = 2 * 600, height = 400)
 par(mfrow = c(1, 2))
-plot(devR, pch = 16, col = 'darkgreen', ylim = c(0, max(devG) + 5),
+plot(devR, pch = 16, col = 'darkgreen', ylim = c(4, 12),
+#plot(devR, pch = 16, col = 'darkgreen',
+#plot(devR, pch = 16, col = 'darkgreen', ylim = c(0, max(devG) + 5),
      main = 'Deviance residuals - Robust regression',
      ylab = 'Deviance residuals')
-#plot(devR, pch = 16, col = 'darkgreen')
-#abline(h = quantile(devR, 0.99), col = 'red')
 abline(h = quantile(devR, 0.99), col = 'red')
 legend('topright', '99% quantile', col = 'red', lty = 1)
-plot(devG, pch = 16, col = 'blue', ylim = c(0, max(devG) + 5),
+plot(devG, pch = 16, col = 'blue', ylim = c(4, 12),
+#plot(devG, pch = 16, col = 'blue',
      main = 'Deviance residuals - Gaussian MLE',
      ylab = 'Deviance residuals')
-#plot(devG, pch = 16, col = 'blue')
 abline(h = quantile(devG, 0.99), col = 'red')
 legend('topright', '99% quantile', col = 'red', lty = 1)
 dev.off()
@@ -147,7 +183,7 @@ plot(stab1[['ws']][2, ],
   main = paste('Parameters "w" with the EM Algorithm (stabilized at iteration = ',
                stab1[['n.iter']],')', sep = ''),
   xlab = 'Iteration number',
-  ylab = 'phi_1',
+  ylab = 'w_1',
   ylim = c(min(stab1[['ws']][2, ]) - 0.01,
            max(stab1[['ws']][2, ]) + 0.01),
   xaxt = 'n', pch = 16, col = 'darkblue', lty = 2, t = 'b', lwd = 2)
@@ -192,9 +228,10 @@ dev.off()
 #########################################################################################
 # Exercise 4
 nus <- seq(2.5, 100, 0.1)
-#nus <- seq(0.1, 100, 0.1)
+#nus <- seq(2.5, 341.5, 1)
 opt.nu <- c()
 for (nu in nus) {
+  #out <- em.stabilized(Phi, t, v = nu, iters = 100, method = 'parameters')
   out <- em.stabilized(Phi, t, v = nu, iters = 100, method = 'likelihood')
   opt.nu <- rbind(opt.nu, c(nu, max(out[[1]])))
 }
@@ -206,12 +243,13 @@ plot(opt.nu[, 2],
   main = 'Choosing "nu"',         
   xlab = 'Value of "nu"',
   ylab = 'Log-likelihood',
+  xaxt = 'n',
   ylim = c(min(opt.nu[, 2]) - 0.2,
            max(opt.nu[, 2]) + 0.2),
   pch = 16, col = 'darkgreen', lty = 2, t = 'b', lwd = 2)
   #xaxt = 'n', pch = 16, col = 'darkgreen', lty = 2, t = 'b', lwd = 2)
 grid()
-#axis(side = 1, at = seq_along(opt.nu[, 1]),
-#     labels = opt.nu[, 1], las = 1, cex.axis = 0.7)
+axis(side = 1, at = seq(1, 1000, 100),
+     labels = seq(nus[1], nus[length(nus)], 10), las = 1, cex.axis = 1)
 dev.off()
 
