@@ -60,7 +60,7 @@ With $C$ containing the terms not dependent on $\mu$ or $\Lambda$. Then:
 \frac{\partial \log \mathcal{L}}{\partial \mu} = 0 &\Leftrightarrow& - \Lambda \sum_{n=1}^{N} \frac{ t_n - \mu }{| t_n - \mu |} = 0 \nonumber \\
 &\Leftrightarrow& \sum_{n=1}^{N} \text{sgn}(t_n - \mu_{MLE}) = 0 
 \end{eqnarray}
-Note that with odd $N$, for (1) to hold, $(N-1)/2$ observations need to have $t_n \geq \mu$ and the other $(N-1)/2$ have $t_n \leq \mu$. Thus:
+Note that with odd $N$, for (1) to hold, $(N-1)/2$ observations need to have $t_n \geq \mu$ and $(N-1)/2$ have $t_n \leq \mu$. The unpaired observation will have $t_n = \mu$. Thus:
 \begin{eqnarray}
 \mathbb{E}[t] = \mu_{MLE} = \text{median}(t_1, t_2, ..., t_n) \nonumber
 \end{eqnarray}
