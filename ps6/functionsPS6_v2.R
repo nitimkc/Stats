@@ -27,11 +27,15 @@ em.algorithm <- function(Phi, t, v, iters = 100) {
     w <- solve(t(Phi) %*% Eta %*% Phi) %*% t(Phi) %*% Eta %*% t
     q <- ((1 / N) * t(errors) %*% Eta %*% errors) ** (-1)
     q <- as.numeric(q)
+
+    # H matrix
+    H <- Eta**(1/2) %*% Phi %*% solve(t(Phi) %*% Eta %*% Phi) %*% t(Phi) %*% Eta**(1/2)
+    #H <- Phi %*% solve(t(Phi) %*% Eta %*% Phi) %*% t(Phi) %*% Eta
     if (iter == iters) { cat('\n') }
   }
 
   # End
-  return(list(w = w, q = q, errors = t - Phi %*% w, etas = etas))
+  return(list(w = w, q = q, errors = t - Phi %*% w, etas = etas, H = H))
 }
 
 ################################################################################
@@ -58,7 +62,7 @@ gaussian.model <- function(Phi, t) {
   sesg <- OpenMx::diag2vec(var.mle) ** (1/2)
 
   # End
-  return(list(w = w.mle, q = q.mle, w.se = sesg, errors = errg))
+  return(list(w = w.mle, q = q.mle, w.se = sesg, errors = errg, H = H))
 }
 
 ################################################################################
@@ -70,8 +74,6 @@ robust.log.lik <- function(N, q, errors, Eta, etas) {
          #log(prod(etas ** (1 / 2)))
          log(prod(etas[etas >= 0] ** (1 / 2)))
   return(val)
-  # Page 121 Bishop
-  #(N * log(gamma(v / 2 + 1 / 2) / gamma(v / 2)) + N * (1 / 2) * log(lambda / (pi * v)) + (- (v / 2) - (1 / 2)) * log(1 + (lambda * t(t - mu) %*% (t - mu)) / v))
 }
 
 ################################################################################
@@ -80,7 +82,9 @@ robust.log.lik <- function(N, t, v, lambda, mu) {
   val <- (N * log(gamma(v / 2 + 1 / 2) / gamma(v / 2)) +
           N * (1 / 2) * log(lambda / (pi * v)) +
           (- (v / 2) - (1 / 2)) *
-          log(1 + (lambda * t(t - mu) %*% (t - mu)) / v))
+          log(1 + (lambda * sum((t - mu) ** 2) / v)))
+  
+  #print(sum((t - mu) ** 2))
   return(as.numeric(val))
 }
 
@@ -122,17 +126,23 @@ em.stabilized <- function(Phi, t, v, iters = 100, method) {
     w <- solve(t(Phi) %*% Eta %*% Phi) %*% t(Phi) %*% Eta %*% t
     q <- ((1 / N) * t(errors) %*% Eta %*% errors) ** (-1)
     q <- as.numeric(q)
+    
+    # Log-likelihood  
+    mu <- Phi %*% w
+    lambda <- q * ((v - 2) / v)
+    #lambda <- q * (v / (v - 2))
+    #log.lik <- robust.log.lik(N, q, errors, Eta, etas)
+    log.lik <- robust.log.lik(N, t, v, lambda, mu)
+    logliks <- c(logliks, log.lik)
+
+    # Return
     if (method == 'parameters') {
       if (sum(abs(w - w.prev)) < 1e-6 &&
           sum(abs(q - q.prev)) < 1e-6) {
         cat('\n')
-        return(list(ws = ws, qs = qs, n.iter = iter))
+        return(list(ws = ws, qs = qs, n.iter = iter, logliks = logliks))
       }
     } else if (method == 'likelihood') {
-      mu <- Phi %*% w
-      lambda <- q * (v / (v - 2))
-      log.lik <- robust.log.lik(N, t, v, lambda, mu)
-      logliks <- c(logliks, log.lik)
       if (iter > 1 && abs(logliks[length(logliks) - 1] - log.lik) < 1e-6) {
         cat('\n')
         return(list(logliks = logliks, n.iter = iter))

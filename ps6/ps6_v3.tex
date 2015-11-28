@@ -102,7 +102,7 @@ Where $C$ contains the multiplication of the terms of the density functions not 
 \end{eqnarray}
 This finishes the proof.\\
 \newline \underline{Part (b)}\\
-\newline Given\footnote{Equations (4.3) and (4.4) in \href{http://www.econ.upf.edu/~omiros/notes2005.pdf}{Omiros' notes} on the appendix of the lecture.}:
+\newline Given\footnote{Equations (4.3) and (4.4) in the \href{http://www.econ.upf.edu/~omiros/notes2005.pdf}{lecture notes} on the appendix of the lecture.}:
 \begin{eqnarray}
 Q(\theta, \theta') = \int \log \left( p(t, \eta | \theta) \right) p(\eta | t, \theta') d\eta = \mathbb{E}\left[ \log \left( p(t, \eta | \theta) \right) \right] \nonumber
 \end{eqnarray}
@@ -130,6 +130,7 @@ Hence proved.
 \includegraphics[scale=0.5]{ps6_plot1_2.png}
 \end{center}
 \underline{Part (b)}\\
+\newline For completeness, we plot the values including the deviance constant terms. The residuals resemble in both models and the simulations produce very similar 99\% quantiles, though not exact. This indicates that with high probability the input data is indeed Gaussian.
 \begin{center}
 \includegraphics[scale=0.6]{ps6_plot2.png}
 \end{center}
@@ -141,13 +142,13 @@ Hence proved.
 \end{center}
 Example (log-likelihood stabilization):
 \begin{center}
-\includegraphics[scale=0.6]{ps6_plot4.png}
+\includegraphics[scale=0.65]{ps6_plot4.png}
 \end{center}
 \underline{Part (d)}\\
-\newline We can choose $\nu$ by running the EM algorithm for different values of $\nu$ and then choosing the smallest $\nu$ that maximizes the log-likelihood, i.e. the one for which increasing $\nu$ raises log-likelihood by a very small amount, again say by $10^{-6}$.\\
+\newline We can choose $\nu$ by running the EM algorithm for different values of $\nu$ and then choosing the smallest $\nu$ that maximizes the log-likelihood, i.e. the one for which increasing $\nu$ raises log-likelihood by a reasonably small amount, here we use 0.1.\\
 \newline Graphical representation:
 \begin{center}
-\includegraphics[scale=0.7]{ps6_plot5.png}
+\includegraphics[scale=0.65]{ps6_plot5.png}
 \end{center}
 
 \end{document}
