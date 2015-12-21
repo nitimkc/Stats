@@ -34,6 +34,7 @@
 }
 
 \begin{document}
+\SweaveOpts{concordance=TRUE}
  
 \header{\sc Barcelona Graduate School of Economics \hfill Master's Degree in Data Science}{\bf Statistical Modeling and Inference $-$ Problem Set \#2}{\sc Niti Mishra $\cdot$ Miquel Torrens $\cdot$ B\'alint V\'an}{October 18\textsuperscript{th}, 2015}
 Solution to proposed exercises.\\
@@ -92,7 +93,7 @@ phix <- function(x, M, basis) {
     })
     out <- c(1, out)
   } else {
-    stop('specify a valid option for the parameter "basis".')
+    stop('Specify a valid option for the parameter "basis".')
   }
   
   # Return the values
