@@ -31,6 +31,7 @@ em.algorithm <- function(Phi, t, v, iters = 100) {
     # H matrix
     H <- Eta**(1/2) %*% Phi %*% solve(t(Phi) %*% Eta %*% Phi) %*% t(Phi) %*% Eta**(1/2)
     #H <- Phi %*% solve(t(Phi) %*% Eta %*% Phi) %*% t(Phi) %*% Eta
+    #H <- Phi %*% solve(t(Phi) %*% Eta %*% Phi) %*% t(Phi)
     if (iter == iters) { cat('\n') }
   }
 
@@ -66,25 +67,11 @@ gaussian.model <- function(Phi, t) {
 }
 
 ################################################################################
-robust.log.lik <- function(N, q, errors, Eta, etas) {
-################################################################################
-  val <- (N / 2) * log(q) -
-         as.numeric((q / 2) * t(errors) %*% Eta %*% errors) +
-         (N / 2) * log(1 / sqrt(2 * pi)) +
-         #log(prod(etas ** (1 / 2)))
-         log(prod(etas[etas >= 0] ** (1 / 2)))
-  return(val)
-}
-
-################################################################################
 robust.log.lik <- function(N, t, v, lambda, mu) {
 ################################################################################
   val <- (N * log(gamma(v / 2 + 1 / 2) / gamma(v / 2)) +
           N * (1 / 2) * log(lambda / (pi * v)) +
-          (- (v / 2) - (1 / 2)) *
-          log(1 + (lambda * sum((t - mu) ** 2) / v)))
-  
-  #print(sum((t - mu) ** 2))
+          (- (v / 2) - (1 / 2)) * sum(log(1 + (lambda * (t - mu) ** 2) / v)))
   return(as.numeric(val))
 }
 
@@ -129,8 +116,8 @@ em.stabilized <- function(Phi, t, v, iters = 100, method) {
     
     # Log-likelihood  
     mu <- Phi %*% w
-    lambda <- q * ((v - 2) / v)
-    #lambda <- q * (v / (v - 2))
+    #lambda <- q * ((v - 2) / v)
+    lambda <- q * (v / (v - 2))
     #log.lik <- robust.log.lik(N, q, errors, Eta, etas)
     log.lik <- robust.log.lik(N, t, v, lambda, mu)
     logliks <- c(logliks, log.lik)
