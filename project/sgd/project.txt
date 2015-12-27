@@ -1,0 +1,22 @@
+++ The variability of stochastic gradient descent 
+
++ Find the Fisher Information matrix for logistic regression models
+
++ Use the 1st 500K observations from the HIGGS data set to calculate
+the MLE, the Fisher information matrix and, hence obtain the standard
+errors of the estimators when all features are present.
+
++ Describe in approx 1-page, the methodology of stochastic gradient
+descent its default implementation in the sgd R package
+
++ Fit the same logistic regression model using stachastic gradient
+descent. You should do this for each of 1, 5, 10, ..., 50 passes
+through the data, starting from the MLE. For each number of passes,
+repeat the estimation for 50 independent random permutations of the
+data. As an outcome, you should produce an appropriate figure that
+illustrates the variability of the estimators due to permutation as a
+function of the number of passes and compares it to the varibility of
+MLE.
+
+References:
+http://link.springer.com/article/10.1007%2Fs11222-015-9560-y#
